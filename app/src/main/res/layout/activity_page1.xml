@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_0A0813"
+    tools:context=".Amenity_Page1">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="225dp"
+        android:layout_marginTop="222dp"
+        android:background="@drawable/img_lock2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1090dp"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_battery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_100"
+            android:textColor="@color/purple_CACAE1"
+            android:textSize="30sp" />
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/Image_battery"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            />
+
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/text_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="오후 06:10"
+        android:textColor="@color/purple_CACAE1"
+        android:textSize="35sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/imageFilterView"
+        android:layout_width="300dp"
+        android:layout_height="600dp"
+        android:layout_marginStart="117dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="45dp"
+        android:background="@drawable/robot_8"
+        app:layout_constraintEnd_toStartOf="@+id/text_home"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="225dp"
+        android:layout_marginTop="222dp"
+        android:background="@drawable/img_lock2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="225dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/img_lock2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="225dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/img_lock2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/text_home"
+        android:layout_width="585dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="160dp"
+        android:gravity="center"
+        android:hint="@string/text_home"
+        android:textColorHint="#33CACAE1"
+        android:textSize="50sp"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="480dp"
+        android:layout_height="3dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/purple_CACAE1"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/button_click_1"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="150sp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/button_click_2"
+        app:layout_constraintStart_toEndOf="@+id/imageButton1"
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="150sp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/button_click_3"
+        app:layout_constraintStart_toEndOf="@+id/imageButton2"
+        app:layout_constraintTop_toBottomOf="@+id/text_home" />
+
+    <ImageButton
+        android:id="@+id/imageButton4"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_4"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton1" />
+
+
+    <ImageButton
+        android:id="@+id/imageButton5"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_5"
+        app:layout_constraintStart_toEndOf="@+id/imageButton4"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton2" />
+
+
+
+    <ImageButton
+        android:id="@+id/imageButton6"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_6"
+        app:layout_constraintStart_toEndOf="@+id/imageButton5"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton3" />
+
+
+    <ImageButton
+        android:id="@+id/imageButton7"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_7"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton4" />
+
+    <ImageButton
+        android:id="@+id/imageButton8"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_8"
+        app:layout_constraintStart_toEndOf="@+id/imageButton7"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton5" />
+
+    <ImageButton
+        android:id="@+id/imageButton9"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_9"
+        app:layout_constraintStart_toEndOf="@+id/imageButton8"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton6" />
+
+
+
+    <ImageButton
+        android:id="@+id/imageButton0"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_0"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonBack"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton8" />
+
+    <ImageButton
+        android:id="@+id/imageButtonBack"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_back"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton7" />
+
+    <ImageButton
+        android:id="@+id/imageButtonEnter"
+        android:layout_width="150dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_click_enter"
+        app:layout_constraintStart_toEndOf="@+id/imageButton0"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton9" />
+
+    <ImageButton
+        android:id="@+id/imageButtonStart"
+        android:layout_width="480dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="145dp"
+        android:layout_marginTop="19dp"
+        android:background="@drawable/button_click_start"
+        app:layout_constraintStart_toEndOf="@+id/imageFilterView"
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonBack" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
