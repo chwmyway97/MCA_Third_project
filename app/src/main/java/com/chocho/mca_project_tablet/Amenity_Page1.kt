@@ -46,6 +46,10 @@ class Amenity_Page1 : AppCompatActivity() {
 
         val text_home = findViewById<TextView>(R.id.text_home)
 
+        imageButtonEnter.setOnClickListener {
+            val bottomSheet = BottomSheetFragment()
+            bottomSheet.show(supportFragmentManager,BottomSheetFragment.TAG)
+        }
 
 
         //버튼 클릭 함수
@@ -103,6 +107,9 @@ class Amenity_Page1 : AppCompatActivity() {
 
 
         }
+
+
+
 
         val database = Firebase.database
         val myRef = database.reference.child("NFC")
