@@ -42,7 +42,7 @@ class Main_loading : AppCompatActivity() {
 
 //        TimerFun()
 
-        val delayMillis = 5000L
+        val delayMillis = 100L
         var percent = 0
 
         startCountdown(delayMillis, 1000, textView, progressBar, percent, value, this)

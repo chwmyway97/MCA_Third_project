@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     tools:context=".BottomSheetFragment">
 
     <ImageView
@@ -17,23 +18,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_write"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="224dp"
-        android:text="Button1"
+    <ImageButton
+        android:id="@+id/btn_lock1"
+        android:layout_width="221dp"
+        android:layout_height="92dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/img_lock3"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.289" />
+
+    <ImageButton
+        android:id="@+id/btn_lock2"
+        android:layout_width="221dp"
+        android:layout_height="92dp"
+        android:layout_marginTop="17dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/img_lock3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.513"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_lock1" />
+
+    <ImageButton
+        android:id="@+id/btn_lock3"
+        android:layout_width="221dp"
+        android:layout_height="92dp"
+        android:layout_marginTop="17dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/img_lock3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_lock2" />
 
     <Button
-        android:id="@+id/btn_read"
-        android:layout_width="300dp"
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_write" />
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
