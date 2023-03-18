@@ -74,33 +74,34 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/lock1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="225dp"
         android:layout_marginTop="222dp"
-        android:background="@drawable/img_lock2"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/lock2"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="225dp"
         android:layout_marginTop="11dp"
-        android:background="@drawable/img_lock2"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/lock1" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/lock3"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="225dp"
         android:layout_marginTop="11dp"
-        android:background="@drawable/img_lock2"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/lock2" />
 
     <TextView
         android:id="@+id/text_home"

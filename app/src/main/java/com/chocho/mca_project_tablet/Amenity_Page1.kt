@@ -8,8 +8,8 @@ import android.os.BatteryManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
@@ -112,8 +112,8 @@ class Amenity_Page1 : AppCompatActivity() {
 
 
         val database = Firebase.database
-        val myRef = database.reference.child("NFC")
-        myRef.addValueEventListener(object: ValueEventListener {
+        val NFC = database.reference.child("NFC")
+        NFC.addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -131,6 +131,38 @@ class Amenity_Page1 : AppCompatActivity() {
                     startActivity(Intent_Serving)
                 }
                 Log.d("파이어", "Value is: $value")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("파이어", "Failed to read value.", error.toException())
+            }
+
+        })
+
+        val unLockImg = R.drawable.img_lock7
+        val lockImg = R.drawable.img_lock2
+        val lock1 = findViewById<ImageView>(R.id.lock1)
+        val lock2 = findViewById<ImageView>(R.id.lock2)
+        val lock3 = findViewById<ImageView>(R.id.lock3)
+
+        val Lock = database.reference.child("lock")
+        Lock.addValueEventListener(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val image_lock1 = snapshot.child("lock1").value
+                val image_lock2 = snapshot.child("lock2").value
+                val image_lock3 = snapshot.child("lock3").value
+
+                if (image_lock1 == "0"){
+                    lock1.setImageResource(lockImg)
+                }else{lock1.setImageResource(unLockImg)}
+                if (image_lock2 == "0"){
+                    lock2.setImageResource(lockImg)
+                }else{lock2.setImageResource(unLockImg)}
+                if (image_lock3 == "0"){
+                    lock3.setImageResource(lockImg)
+                }else{lock3.setImageResource(unLockImg)}
             }
 
             override fun onCancelled(error: DatabaseError) {

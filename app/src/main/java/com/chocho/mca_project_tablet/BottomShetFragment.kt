@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -23,6 +24,7 @@ private const val PREFS_FILENAME = "com.chocho.myapp.prefs"
 private const val LOCK1_KEY = "lock1"
 private const val LOCK2_KEY = "lock2"
 private const val LOCK3_KEY = "lock3"
+
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
 
@@ -42,6 +44,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
+            bottomSheetDialog.setCanceledOnTouchOutside(false) // 바깥쪽 터치로 다이얼로그가 사라지는 것을 방지
             setupRatio(bottomSheetDialog)
         }
 
@@ -62,11 +65,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val lock2 = lock.child("lock2")
         val lock3 = lock.child("lock3")
 
-        val btn_lock1 = dialog?.findViewById<ImageButton>(R.id.btn_lock1)
-        val btn_lock2 = dialog?.findViewById<ImageButton>(R.id.btn_lock2)
-        val btn_lock3 = dialog?.findViewById<ImageButton>(R.id.btn_lock3)
+        val btn_lock1 = view.findViewById<ImageButton>(R.id.btn_lock1)
+        val btn_lock2 = view.findViewById<ImageButton>(R.id.btn_lock2)
+        val btn_lock3 = view.findViewById<ImageButton>(R.id.btn_lock3)
 
-        val unLockImg = R.drawable.button_1
+        val unLockImg = R.drawable.img_lock6
         val lockImg = R.drawable.img_lock3
 
     // SharedPreferences 인스턴스 가져오기
@@ -79,19 +82,19 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         // 기존 상태 적용
         if (lock1Pref == true) {
-            btn_lock1?.setImageResource(unLockImg)
+            btn_lock1.setImageResource(unLockImg)
         } else {
-            btn_lock1?.setImageResource(lockImg)
+            btn_lock1.setImageResource(lockImg)
         }
         if (lock2Pref == true) {
-            btn_lock2?.setImageResource(unLockImg)
+            btn_lock2.setImageResource(unLockImg)
         } else {
-            btn_lock2?.setImageResource(lockImg)
+            btn_lock2.setImageResource(lockImg)
         }
         if (lock3Pref == true) {
-            btn_lock3?.setImageResource(unLockImg)
+            btn_lock3.setImageResource(unLockImg)
         } else {
-            btn_lock3?.setImageResource(lockImg)
+            btn_lock3.setImageResource(lockImg)
         }
 
         btn_lock1?.setOnClickListener {
@@ -175,9 +178,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         behavior.isDraggable = false
         behavior.isHideable = false
 
-        val button = bottomSheetDialog.findViewById<Button>(R.id.button)
+        val button = bottomSheetDialog.findViewById<ImageButton>(R.id.button)
         button?.setOnClickListener {
-            Toast.makeText(context,"hi",Toast.LENGTH_SHORT).show()
             bottomSheetDialog.dismiss()
         }
 
@@ -204,4 +206,5 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "BottomSheetFragment"
     }
+
 }
