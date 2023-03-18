@@ -14,11 +14,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.database.*
-
-import java.lang.Integer.min
+import java.lang.Math.min
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
 
+    private var mBottomBehavior: BottomSheetBehavior<*>? = null
     // Firebase
     private lateinit var database: FirebaseDatabase
     private lateinit var myRef: DatabaseReference
@@ -65,6 +65,8 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
 
 
+
+
     private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {
         val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View
         val behavior = BottomSheetBehavior.from<View>(bottomSheet)
@@ -74,8 +76,14 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         bottomSheet.layoutParams = layoutParams
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
+    override fun onStart() {
+        super.onStart()
+        mBottomBehavior = BottomSheetBehavior.from(requireView().parent as View)
+        (mBottomBehavior as BottomSheetBehavior<*>).maxWidth = ViewGroup.LayoutParams.MATCH_PARENT
+        (mBottomBehavior as BottomSheetBehavior<*>).state = BottomSheetBehavior.STATE_EXPANDED
+    }
     private fun getBottomSheetDialogDefaultHeight(): Int {
-        return getWindowHeight() * 90 / 100
+        return getWindowHeight() * 70 / 100
     }
 
     private fun getWindowHeight(): Int {
