@@ -36,13 +36,13 @@ class Main : AppCompatActivity() {
                 // whenever data at this location is updated.
                 val value = snapshot.value
 
-                if (value == "1"){
+                if (value == "Hotel"){
                     val Intent_Amenity = Intent(this@Main,Main_loading::class.java)
                     Intent_Amenity.putExtra("key1","1")
                     startActivity(Intent_Amenity)
                 }
 
-                if (value == "2"){
+                if (value == "Serving"){
                     val Intent_Serving = Intent(this@Main,Main_loading::class.java)
                     Intent_Serving.putExtra("key1","2")
                     startActivity(Intent_Serving)

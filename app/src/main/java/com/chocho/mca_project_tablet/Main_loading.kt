@@ -109,16 +109,16 @@ class Main_loading : AppCompatActivity() {
                 }
             }
             override fun onFinish() {
-                if (value == "0") {
+                if (value == "None") {
                     activity.startActivity(Intent(activity, Main::class.java))
                 }
-                if (value == "1") {
+                if (value == "Hotel") {
                     val Intent_Amenity = Intent(activity, Amenity_Main::class.java)
                     Intent_Amenity.putExtra("key10","10")
                     startActivity(Intent_Amenity)
 //                    activity.startActivity(Intent(activity, Amenity_Main::class.java))
                 }
-                if (value == "2") {
+                if (value == "Serving") {
                     val Intent_Serving = Intent(activity, Serving_Main::class.java)
                     Intent_Serving.putExtra("key11","11")
                     startActivity(Intent_Serving)

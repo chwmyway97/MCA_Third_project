@@ -1,7 +1,6 @@
-@file:Suppress("UNREACHABLE_CODE")
-
 package com.chocho.mca_project_tablet
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
@@ -10,6 +9,8 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
@@ -20,10 +21,12 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.locks.Lock
 
 
 class Amenity_Page1 : AppCompatActivity() {
 
+    private val database = Firebase.database
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,38 +45,63 @@ class Amenity_Page1 : AppCompatActivity() {
         val imageButtonBack = findViewById<ImageButton>(R.id.imageButtonBack)
         val imageButtonEnter = findViewById<ImageButton>(R.id.imageButtonEnter)
         val imageButtonStart = findViewById<ImageButton>(R.id.imageButtonStart)
-
+        val NFC = database.reference.child("NFC")
+        val Lock = database.reference.child("Hotel_Lock")
+        val magnetic = database.reference.child("Hotel_Magnetic")
+        val go = database.reference.child("go")
 
         val text_home = findViewById<TextView>(R.id.text_home)
-
-        imageButtonEnter.setOnClickListener {
-            val bottomSheet = BottomSheetFragment()
-            bottomSheet.show(supportFragmentManager,BottomSheetFragment.TAG)
-        }
-
+        val backKey: String = text_home.text.toString()
 
         //버튼 클릭 함수
         fun buttonClick(num: String) {
             val backKey: String = text_home.text.toString()
-            if (text_home.text == "호실을 입력해주세요") {
-                text_home.text = ""
-                text_home.setTextColor(ContextCompat.getColor(this, R.color.purple_CACAE1))
-                text_home.append(num)
-            } else {
+            val newKey = backKey + num
+            text_home.setTextColor(ContextCompat.getColor(this, R.color.purple_CACAE1))
 
-                if (backKey.length > 2) {
-                    text_home.text
-                } else {
-                    text_home.setTextColor(ContextCompat.getColor(this, R.color.purple_CACAE1))
-                    text_home.append(num)
+
+
+            if (newKey.length <= 3) {
+                text_home.text = newKey
+                Log.d("백키", newKey)
+                Log.d("백키1", newKey.length.toString())
+                imageButtonStart.setOnClickListener {
+
+                    magnetic.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val magnetic1 = snapshot.child("Hotel_Magnetic1").value.toString()
+                            val magnetic2 = snapshot.child("Hotel_Magnetic2").value.toString()
+                            val magnetic3 = snapshot.child("Hotel_Magnetic3").value.toString()
+                            val lock1 = Lock.child("Hotel_Lock1")
+                            val lock2 = Lock.child("Hotel_Lock2")
+                            val lock3 = Lock.child("Hotel_Lock3")
+
+                            Log.d(magnetic1, "Value is: $magnetic1")
+
+                            if (magnetic1 == "First_unlock" || magnetic2 == "Second_Unlock" || magnetic3 == "Third_Unlock") {
+                                makeText(this@Amenity_Page1, "문을 닫아주세요", Toast.LENGTH_SHORT).show()
+
+                            } else {
+                                makeText(this@Amenity_Page1, "출발합니다.", Toast.LENGTH_SHORT).show()
+                                lock1.setValue("First_Lock")
+                                lock2.setValue("Second_Lock")
+                                lock3.setValue("Third_Lock")
+                                go.setValue(text_home.text)
+
+                            }
+                            Log.d("마그네틱", magnetic1 + magnetic2 + magnetic3)
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+
+                    })
+
                 }
             }
-            text_home.text
-//            if (backKey.length == 3) {
-//                text_home.text = "${text_home.text}호"
-//            }
-
-
         }
 
 
@@ -89,45 +117,85 @@ class Amenity_Page1 : AppCompatActivity() {
         imageButton9.setOnClickListener { buttonClick("9") }
         imageButton10.setOnClickListener { buttonClick("0") }
 
-
         imageButtonBack.setOnClickListener {
 
             val backKey: String = text_home.text.toString()
 
-
-            if (backKey.length > 0) {
+            if (backKey.isNotEmpty()) {
                 Log.d("길이", backKey.length.toString())
                 if (backKey.length == 5) {
                     text_home.text = backKey.substring(0, backKey.length - 2)
+                } else if (backKey.length == 4) {
+                    text_home.text = backKey.substring(0, backKey.length - 1)
                 } else {
                     text_home.text = backKey.substring(0, backKey.length - 1)
                 }
+                imageButtonStart.setOnClickListener {
+
+                    magnetic.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val magnetic1 = snapshot.child("Hotel_Magnetic1").value.toString()
+                            val magnetic2 = snapshot.child("Hotel_Magnetic2").value.toString()
+                            val magnetic3 = snapshot.child("Hotel_Magnetic3").value.toString()
+                            val lock1 = Lock.child("Hotel_Lock1")
+                            val lock2 = Lock.child("Hotel_Lock2")
+                            val lock3 = Lock.child("Hotel_Lock3")
+
+                            Log.d(magnetic1, "Value is: $magnetic1")
+
+                            if (magnetic1 == "First_unlock" || magnetic2 == "Second_Unlock" || magnetic3 == "Third_Unlock") {
+                                makeText(this@Amenity_Page1, "문을 닫아주세요", Toast.LENGTH_SHORT).show()
+
+                            } else {
+                                makeText(this@Amenity_Page1, "출발합니다.", Toast.LENGTH_SHORT).show()
+                                lock1.setValue("First_Lock")
+                                lock2.setValue("Second_Lock")
+                                lock3.setValue("Third_Lock")
+                                go.setValue(text_home.text)
+
+                            }
+                            Log.d("마그네틱", magnetic1 + magnetic2 + magnetic3)
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+
+                    })
+
+                }
 
             }
+        }
 
 
+
+        imageButtonEnter.setOnClickListener {
+            val bottomSheet = BottomSheetFragment()
+            bottomSheet.show(supportFragmentManager, BottomSheetFragment.TAG)
         }
 
 
 
 
-        val database = Firebase.database
-        val NFC = database.reference.child("NFC")
-        NFC.addValueEventListener(object: ValueEventListener {
+
+        NFC.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val value = snapshot.value
 
-                if (value == "0"){
-                    val Main = Intent(this@Amenity_Page1,Main_loading::class.java)
-                    Main.putExtra("key1","0")
+                if (value == "None") {
+                    val Main = Intent(this@Amenity_Page1, Main_loading::class.java)
+                    Main.putExtra("key1", "0")
                     startActivity(Main)
                 }
                 Log.d("파이어", "Value is: $value")
-                if (value == "2"){
-                    val Intent_Serving = Intent(this@Amenity_Page1,Main_loading::class.java)
-                    Intent_Serving.putExtra("key1","2")
+                if (value == "Serving") {
+                    val Intent_Serving = Intent(this@Amenity_Page1, Main_loading::class.java)
+                    Intent_Serving.putExtra("key1", "2")
                     startActivity(Intent_Serving)
                 }
                 Log.d("파이어", "Value is: $value")
@@ -141,28 +209,34 @@ class Amenity_Page1 : AppCompatActivity() {
 
         val unLockImg = R.drawable.img_lock7
         val lockImg = R.drawable.img_lock2
-        val lock1 = findViewById<ImageView>(R.id.lock1)
-        val lock2 = findViewById<ImageView>(R.id.lock2)
-        val lock3 = findViewById<ImageView>(R.id.lock3)
+        val lock1_img = findViewById<ImageView>(R.id.lock1)
+        val lock2_img = findViewById<ImageView>(R.id.lock2)
+        val lock3_img = findViewById<ImageView>(R.id.lock3)
 
-        val Lock = database.reference.child("lock")
-        Lock.addValueEventListener(object: ValueEventListener {
+
+        Lock.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val image_lock1 = snapshot.child("lock1").value
-                val image_lock2 = snapshot.child("lock2").value
-                val image_lock3 = snapshot.child("lock3").value
+                val image_lock1 = snapshot.child("Hotel_Lock1").value
+                val image_lock2 = snapshot.child("Hotel_Lock2").value
+                val image_lock3 = snapshot.child("Hotel_Lock3").value
 
-                if (image_lock1 == "0"){
-                    lock1.setImageResource(lockImg)
-                }else{lock1.setImageResource(unLockImg)}
-                if (image_lock2 == "0"){
-                    lock2.setImageResource(lockImg)
-                }else{lock2.setImageResource(unLockImg)}
-                if (image_lock3 == "0"){
-                    lock3.setImageResource(lockImg)
-                }else{lock3.setImageResource(unLockImg)}
+                if (image_lock1 == "First_Lock") {
+                    lock1_img.setImageResource(lockImg)
+                } else {
+                    lock1_img.setImageResource(unLockImg)
+                }
+                if (image_lock2 == "Second_Lock") {
+                    lock2_img.setImageResource(lockImg)
+                } else {
+                    lock2_img.setImageResource(unLockImg)
+                }
+                if (image_lock3 == "Third_Lock") {
+                    lock3_img.setImageResource(lockImg)
+                } else {
+                    lock3_img.setImageResource(unLockImg)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -170,6 +244,7 @@ class Amenity_Page1 : AppCompatActivity() {
             }
 
         })
+
 
         //Thread 이용하여 매초마다 업데이트 되는 방식
         val t: Thread = object : Thread() {
@@ -185,6 +260,7 @@ class Amenity_Page1 : AppCompatActivity() {
         }
         t.start()
     }
+
 
     private fun updateYOURthing() {
 
@@ -212,12 +288,12 @@ class Amenity_Page1 : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace();
         }
-        Log.d("---", "---");
-        Log.w("//===========//", "================================================");
-        Log.d("ㅇ", "\n" + "[A_Battery > getBatteryRemainder() 메소드 : 현재 남은 배터리 잔량 확인 수행 실시]");
-        Log.d("ㅇ", "\n[배터리 잔량 : $returnData]");
-        Log.w("//===========//", "================================================");
-        Log.d("---", "---");
+//        Log.d("---", "---");
+//        Log.w("//===========//", "================================================");
+//        Log.d("ㅇ", "\n" + "[A_Battery > getBatteryRemainder() 메소드 : 현재 남은 배터리 잔량 확인 수행 실시]");
+//        Log.d("ㅇ", "\n[배터리 잔량 : $returnData]");
+//        Log.w("//===========//", "================================================");
+//        Log.d("---", "---");
         text_battery.text = "$returnData%"
         someFunction(returnData)
 
@@ -226,27 +302,23 @@ class Amenity_Page1 : AppCompatActivity() {
         return
 
 
-
     }
-    
-    fun someFunction(returnData : String) {
-        val Image_battery =findViewById<ImageFilterView>(R.id.Image_battery)
+
+    fun someFunction(returnData: String) {
+        val Image_battery = findViewById<ImageFilterView>(R.id.Image_battery)
         // returnData 값이 변경될 때마다 호출되는 코드 블록
         if (returnData.toInt() == 100) {
             // 이미지를 변경하는 코드
             Image_battery.setImageResource(R.drawable.battery_full)
         }
-        if( returnData.toInt() < 100){
+        if (returnData.toInt() < 100) {
             Image_battery.setImageResource(R.drawable.battery_threequarter)
-        }
-        else if (returnData.toInt() <= 50){
+        } else if (returnData.toInt() <= 50) {
             Image_battery.setImageResource(R.drawable.battery_half)
-        }
-        else if (returnData.toInt() <= 30  ){
+        } else if (returnData.toInt() <= 30) {
             Image_battery.setImageResource(R.drawable.battery_low)
         }
     }
-
 
 
 }

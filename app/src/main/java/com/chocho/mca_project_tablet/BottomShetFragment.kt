@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -18,15 +19,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.database.*
 import java.lang.Math.min
+import java.util.concurrent.locks.Lock
 
 // 상수 선언
 private const val PREFS_FILENAME = "com.chocho.myapp.prefs"
-private const val LOCK1_KEY = "lock1"
-private const val LOCK2_KEY = "lock2"
-private const val LOCK3_KEY = "lock3"
+private const val LOCK1_KEY = "Hotel_Lock1"
+private const val LOCK2_KEY = "Hotel_Lock2"
+private const val LOCK3_KEY = "Hotel_Lock3"
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
-
 
 
     private var mBottomBehavior: BottomSheetBehavior<*>? = null
@@ -56,14 +57,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
         // Firebase
         database = FirebaseDatabase.getInstance()
-        lock = database.getReference("lock")
+        lock = database.getReference("Hotel_Lock")
 
-        val lock1 = lock.child("lock1")
-        val lock2 = lock.child("lock2")
-        val lock3 = lock.child("lock3")
+        val lock1 = lock.child("Hotel_Lock1")
+        val lock2 = lock.child("Hotel_Lock2")
+        val lock3 = lock.child("Hotel_Lock3")
 
         val btn_lock1 = view.findViewById<ImageButton>(R.id.btn_lock1)
         val btn_lock2 = view.findViewById<ImageButton>(R.id.btn_lock2)
@@ -72,7 +72,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val unLockImg = R.drawable.img_lock6
         val lockImg = R.drawable.img_lock3
 
-    // SharedPreferences 인스턴스 가져오기
+        // SharedPreferences 인스턴스 가져오기
         val prefs = context?.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
 
         // lock1 값이 저장된 SharedPreferences에서 가져오기
@@ -103,12 +103,12 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     val value = snapshot.value.toString()
 
                     // lock 값이 0이면 1로 업데이트, 1이면 0으로 업데이트
-                    if (value == "0") {
-                        lock1.setValue("1")
+                    if (value == "First_Lock") {
+                        lock1.setValue("First_Unlock")
                         btn_lock1.setImageResource(unLockImg)
                         prefs?.edit()?.putBoolean(LOCK1_KEY, true)?.apply()
                     } else {
-                        lock1.setValue("0")
+                        lock1.setValue("First_Lock")
                         btn_lock1.setImageResource(lockImg)
                         prefs?.edit()?.putBoolean(LOCK1_KEY, false)?.apply()
                     }
@@ -125,12 +125,12 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     val value = snapshot.value.toString()
 
                     // lock 값이 0이면 1로 업데이트, 1이면 0으로 업데이트
-                    if (value == "0") {
-                        lock2.setValue("1")
+                    if (value == "Second_Lock") {
+                        lock2.setValue("Second_Unlock")
                         btn_lock2.setImageResource(unLockImg)
                         prefs?.edit()?.putBoolean(LOCK2_KEY, true)?.apply()
                     } else {
-                        lock2.setValue("0")
+                        lock2.setValue("Second_Lock")
                         btn_lock2.setImageResource(lockImg)
                         prefs?.edit()?.putBoolean(LOCK2_KEY, false)?.apply()
                     }
@@ -147,12 +147,12 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     val value = snapshot.value.toString()
 
                     // lock 값이 0이면 1로 업데이트, 1이면 0으로 업데이트
-                    if (value == "0") {
-                        lock3.setValue("1")
+                    if (value == "Third_Lock") {
+                        lock3.setValue("Third_Unlock")
                         btn_lock3.setImageResource(unLockImg)
                         prefs?.edit()?.putBoolean(LOCK3_KEY, true)?.apply()
                     } else {
-                        lock3.setValue("0")
+                        lock3.setValue("Third_Lock")
                         btn_lock3.setImageResource(lockImg)
                         prefs?.edit()?.putBoolean(LOCK3_KEY, false)?.apply()
                     }
@@ -162,9 +162,44 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     Log.d(TAG, "Failed to read value.", error.toException())
                 }
             })
-        }
-    }
 
+        }
+//        val Lock = database.reference.child("lock")
+//
+//        Lock.addValueEventListener(object : ValueEventListener {
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//
+//                val image_lock1 = snapshot.child("lock1").value
+//                val image_lock2 = snapshot.child("lock2").value
+//                val image_lock3 = snapshot.child("lock3").value
+//                val lock1_img = view.findViewById<ImageView>(R.id.lock1)
+//                val lock2_img = view.findViewById<ImageView>(R.id.lock2)
+//                val lock3_img = view.findViewById<ImageView>(R.id.lock3)
+//
+//                if (image_lock1 == "0") {
+//                    lock1_img.setImageResource(lockImg)
+//                } else {
+//                    lock1_img.setImageResource(unLockImg)
+//                }
+//                if (image_lock2 == "0") {
+//                    lock2_img.setImageResource(lockImg)
+//                } else {
+//                    lock2_img.setImageResource(unLockImg)
+//                }
+//                if (image_lock3 == "0") {
+//                    lock3_img.setImageResource(lockImg)
+//                } else {
+//                    lock3_img.setImageResource(unLockImg)
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
+    }
 
     private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {
         val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View
@@ -182,7 +217,6 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         button?.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-
 
 
     }

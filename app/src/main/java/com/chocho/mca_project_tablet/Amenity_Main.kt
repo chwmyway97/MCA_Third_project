@@ -42,13 +42,13 @@ class Amenity_Main : AppCompatActivity() {
                 // whenever data at this location is updated.
                 val value = snapshot.value
 
-                if (value == "0"){
+                if (value == "None"){
                     val Main = Intent(this@Amenity_Main,Main_loading::class.java)
                     Main.putExtra("key1","0")
                     startActivity(Main)
                 }
                 Log.d("파이어", "Value is: $value")
-                if (value == "2"){
+                if (value == "Serving"){
                     val Intent_Serving = Intent(this@Amenity_Main,Main_loading::class.java)
                     Intent_Serving.putExtra("key1","2")
                     startActivity(Intent_Serving)
