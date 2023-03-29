@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.BATTERY_STATS"
-        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.BATTERY_STATS" tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +13,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MCA_proJect_tablet"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:hardwareAccelerated="true"
+
+        >
 
         <activity
             android:name=".Main"
@@ -31,6 +34,8 @@
         <activity android:name=".Serving_Main"  android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".Serving_page1" android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".Main_loading" android:exported="true"  android:screenOrientation="landscape"/>
+<!--        <activity android:name=".QR" android:exported="true"  android:screenOrientation="landscape"/>-->
+
 
 
     </application>

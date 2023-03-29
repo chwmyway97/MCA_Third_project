@@ -1,6 +1,5 @@
 package com.chocho.mca_project_tablet
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
@@ -21,7 +20,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.locks.Lock
 
 
 class Amenity_Page1 : AppCompatActivity() {
@@ -46,50 +44,85 @@ class Amenity_Page1 : AppCompatActivity() {
         val imageButtonEnter = findViewById<ImageButton>(R.id.imageButtonEnter)
         val imageButtonStart = findViewById<ImageButton>(R.id.imageButtonStart)
         val NFC = database.reference.child("NFC")
-        val Lock = database.reference.child("Hotel_Lock")
-        val magnetic = database.reference.child("Hotel_Magnetic")
-        val go = database.reference.child("go")
+        val Motor = database.reference.child("Hotel_Motor")
+        val Start = database.reference.child("Start")
+        val go = database.reference.child("Hotel")
 
         val text_home = findViewById<TextView>(R.id.text_home)
-        val backKey: String = text_home.text.toString()
+
+
 
         //버튼 클릭 함수
         fun buttonClick(num: String) {
             val backKey: String = text_home.text.toString()
             val newKey = backKey + num
+
             text_home.setTextColor(ContextCompat.getColor(this, R.color.purple_CACAE1))
-
-
+            Log.d("백키4", newKey)
 
             if (newKey.length <= 3) {
                 text_home.text = newKey
                 Log.d("백키", newKey)
                 Log.d("백키1", newKey.length.toString())
+
+
                 imageButtonStart.setOnClickListener {
 
-                    magnetic.addListenerForSingleValueEvent(object : ValueEventListener {
+                    if (newKey.isEmpty()) {
+                        makeText(this@Amenity_Page1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    Start.setValue("1")
+                    Start.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
-                            val magnetic1 = snapshot.child("Hotel_Magnetic1").value.toString()
+                            val Start12 = snapshot.value
                             val magnetic2 = snapshot.child("Hotel_Magnetic2").value.toString()
                             val magnetic3 = snapshot.child("Hotel_Magnetic3").value.toString()
-                            val lock1 = Lock.child("Hotel_Lock1")
-                            val lock2 = Lock.child("Hotel_Lock2")
-                            val lock3 = Lock.child("Hotel_Lock3")
+                            val lock1 = Motor.child("Hotel_Lock1")
+                            val lock2 = Motor.child("Hotel_Lock2")
+                            val lock3 = Motor.child("Hotel_Lock3")
 
-                            Log.d(magnetic1, "Value is: $magnetic1")
+                            Log.d("확인", "Value is: $Start12")
 
-                            if (magnetic1 == "First_unlock" || magnetic2 == "Second_Unlock" || magnetic3 == "Third_Unlock") {
-                                makeText(this@Amenity_Page1, "문을 닫아주세요", Toast.LENGTH_SHORT).show()
+                            if (Start12 == "faill" || newKey.length < 3) {
+                                if (newKey.length < 3) {
+                                    makeText(this@Amenity_Page1, "호실을 정해 주세요", Toast.LENGTH_SHORT).show()
 
-                            } else {
+                                } else {
+                                    makeText(this@Amenity_Page1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+                                }
+
+
+                            }
+                            if(Start12 == "success") {
+
                                 makeText(this@Amenity_Page1, "출발합니다.", Toast.LENGTH_SHORT).show()
+                                Motor.addValueEventListener(object : ValueEventListener{
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val Hotel_Lock1 = snapshot.child("Hotel_Lock1").value.toString()
+                                        val Hotel_Lock2 = snapshot.child("Hotel_Lock2").value.toString()
+                                        val Hotel_Lock3 = snapshot.child("Hotel_Lock3").value.toString()
+                                        if (Hotel_Lock1 == "First_Unlock"){go.child("Lock1").setValue("First_Unlock")}
+                                        if (Hotel_Lock2 == "Second_Unlock"){go.child("Lock2").setValue("Second_Unlock")}
+                                        if (Hotel_Lock3 == "Third_Unlock"){go.child("Lock3").setValue("Third_Unlock")}
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        TODO("Not yet implemented")
+                                    }
+
+                                })
                                 lock1.setValue("First_Lock")
                                 lock2.setValue("Second_Lock")
                                 lock3.setValue("Third_Lock")
-                                go.setValue(text_home.text)
+                                go.child("go").setValue(text_home.text)
+
+                                val intent_Amenity_main = Intent(this@Amenity_Page1,Amenity_Main::class.java)
+                                intent_Amenity_main.putExtra("호실",text_home.text)
+
+                                startActivity(intent_Amenity_main)
 
                             }
-                            Log.d("마그네틱", magnetic1 + magnetic2 + magnetic3)
+
 
                         }
 
@@ -116,42 +149,84 @@ class Amenity_Page1 : AppCompatActivity() {
         imageButton8.setOnClickListener { buttonClick("8") }
         imageButton9.setOnClickListener { buttonClick("9") }
         imageButton10.setOnClickListener { buttonClick("0") }
-
+//문제있음
         imageButtonBack.setOnClickListener {
 
             val backKey: String = text_home.text.toString()
+            val newKey = backKey
 
-            if (backKey.isNotEmpty()) {
-                Log.d("길이", backKey.length.toString())
-                if (backKey.length == 5) {
-                    text_home.text = backKey.substring(0, backKey.length - 2)
-                } else if (backKey.length == 4) {
-                    text_home.text = backKey.substring(0, backKey.length - 1)
-                } else {
-                    text_home.text = backKey.substring(0, backKey.length - 1)
+            Log.d("백키", newKey)
+            if (newKey.length <= 3) {
+                text_home.text = newKey
+                Log.d("백키", newKey)
+                Log.d("백키1", newKey.length.toString())
+
+                if (backKey.isNotEmpty()) {
+
+                    if (backKey.length == 3) {
+                        text_home.text = backKey.substring(0, backKey.length - 1)
+                    } else if (backKey.length == 2) {
+                        text_home.text = backKey.substring(0, backKey.length - 1)
+                    } else {
+                        text_home.text = backKey.substring(0, backKey.length - 1)
+
+                    }
+
                 }
-                imageButtonStart.setOnClickListener {
 
-                    magnetic.addListenerForSingleValueEvent(object : ValueEventListener {
+                imageButtonStart.setOnClickListener {
+                    Log.d("백키3", newKey.length.toString())
+                    if (newKey.isEmpty()) {
+                        makeText(this@Amenity_Page1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    Start.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val magnetic1 = snapshot.child("Hotel_Magnetic1").value.toString()
                             val magnetic2 = snapshot.child("Hotel_Magnetic2").value.toString()
                             val magnetic3 = snapshot.child("Hotel_Magnetic3").value.toString()
-                            val lock1 = Lock.child("Hotel_Lock1")
-                            val lock2 = Lock.child("Hotel_Lock2")
-                            val lock3 = Lock.child("Hotel_Lock3")
+                            val lock1 = Motor.child("Hotel_Lock1")
+                            val lock2 = Motor.child("Hotel_Lock2")
+                            val lock3 = Motor.child("Hotel_Lock3")
 
                             Log.d(magnetic1, "Value is: $magnetic1")
 
-                            if (magnetic1 == "First_unlock" || magnetic2 == "Second_Unlock" || magnetic3 == "Third_Unlock") {
-                                makeText(this@Amenity_Page1, "문을 닫아주세요", Toast.LENGTH_SHORT).show()
+                            if (magnetic1 == "First_Unlock" || magnetic2 == "Second_Unlock" || magnetic3 == "Third_Unlock" || newKey.length <=3) {
+                                if (newKey.length < 3) {
+                                    makeText(this@Amenity_Page1, "호실을 정해 주세요", Toast.LENGTH_SHORT).show()
+
+                                } else {
+                                    makeText(this@Amenity_Page1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+                                }
+
 
                             } else {
+                                Log.d("newKey", newKey.length.toString())
                                 makeText(this@Amenity_Page1, "출발합니다.", Toast.LENGTH_SHORT).show()
+                                Motor.addValueEventListener(object : ValueEventListener{
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val Hotel_Lock1 = snapshot.child("Hotel_Lock1").value.toString()
+                                        val Hotel_Lock2 = snapshot.child("Hotel_Lock2").value.toString()
+                                        val Hotel_Lock3 = snapshot.child("Hotel_Lock3").value.toString()
+                                        if (Hotel_Lock1 == "First_Unlock"){go.child("Lock1").setValue("First_Unlock")}
+                                        if (Hotel_Lock2 == "Second_Unlock"){go.child("Lock2").setValue("Second_Unlock")}
+                                        if (Hotel_Lock3 == "Third_Unlock"){go.child("Lock3").setValue("Third_Unlock")}
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        TODO("Not yet implemented")
+                                    }
+
+                                })
+                                Log.d("확인",lock2.toString())
+                                Log.d("확인",lock3.toString())
                                 lock1.setValue("First_Lock")
                                 lock2.setValue("Second_Lock")
                                 lock3.setValue("Third_Lock")
-                                go.setValue(text_home.text)
+                                go.child("go").setValue(text_home.text)
+                                val intent_Amenity_main = Intent(this@Amenity_Page1,Amenity_Main::class.java)
+                                intent_Amenity_main.putExtra("호실",text_home.text)
+
+                                startActivity(intent_Amenity_main)
 
                             }
                             Log.d("마그네틱", magnetic1 + magnetic2 + magnetic3)
@@ -166,21 +241,19 @@ class Amenity_Page1 : AppCompatActivity() {
                     })
 
                 }
-
             }
+
         }
 
 
-
+        //잠금장치 클릭시
         imageButtonEnter.setOnClickListener {
             val bottomSheet = BottomSheetFragment()
             bottomSheet.show(supportFragmentManager, BottomSheetFragment.TAG)
         }
 
 
-
-
-
+        //NFC
         NFC.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -214,7 +287,7 @@ class Amenity_Page1 : AppCompatActivity() {
         val lock3_img = findViewById<ImageView>(R.id.lock3)
 
 
-        Lock.addValueEventListener(object : ValueEventListener {
+        Motor.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 

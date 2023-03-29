@@ -50,6 +50,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         }
 
 
+
         return dialog
     }
 
@@ -71,6 +72,38 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         val unLockImg = R.drawable.img_lock6
         val lockImg = R.drawable.img_lock3
+
+
+        lock.addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val image_lock1 = snapshot.child("Hotel_Lock1").value
+                val image_lock2 = snapshot.child("Hotel_Lock2").value
+                val image_lock3 = snapshot.child("Hotel_Lock3").value
+
+                if (image_lock1 == "First_Lock") {
+                    btn_lock1.setImageResource(lockImg)
+                } else {
+                    btn_lock1.setImageResource(unLockImg)
+                }
+                if (image_lock2 == "Second_Lock") {
+                    btn_lock2.setImageResource(lockImg)
+                } else {
+                    btn_lock2.setImageResource(unLockImg)
+                }
+                if (image_lock3 == "Third_Lock") {
+                    btn_lock3.setImageResource(lockImg)
+                } else {
+                    btn_lock3.setImageResource(unLockImg)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w("파이어", "Failed to read value.", error.toException())
+            }
+
+        })
 
         // SharedPreferences 인스턴스 가져오기
         val prefs = context?.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
@@ -164,41 +197,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             })
 
         }
-//        val Lock = database.reference.child("lock")
-//
-//        Lock.addValueEventListener(object : ValueEventListener {
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//
-//                val image_lock1 = snapshot.child("lock1").value
-//                val image_lock2 = snapshot.child("lock2").value
-//                val image_lock3 = snapshot.child("lock3").value
-//                val lock1_img = view.findViewById<ImageView>(R.id.lock1)
-//                val lock2_img = view.findViewById<ImageView>(R.id.lock2)
-//                val lock3_img = view.findViewById<ImageView>(R.id.lock3)
-//
-//                if (image_lock1 == "0") {
-//                    lock1_img.setImageResource(lockImg)
-//                } else {
-//                    lock1_img.setImageResource(unLockImg)
-//                }
-//                if (image_lock2 == "0") {
-//                    lock2_img.setImageResource(lockImg)
-//                } else {
-//                    lock2_img.setImageResource(unLockImg)
-//                }
-//                if (image_lock3 == "0") {
-//                    lock3_img.setImageResource(lockImg)
-//                } else {
-//                    lock3_img.setImageResource(unLockImg)
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+
     }
 
     private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {
