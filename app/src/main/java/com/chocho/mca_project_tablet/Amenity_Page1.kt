@@ -1,5 +1,6 @@
 package com.chocho.mca_project_tablet
 
+import android.Manifest.permission.NFC
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
@@ -25,6 +26,10 @@ import java.util.*
 class Amenity_Page1 : AppCompatActivity() {
 
     private val database = Firebase.database
+    val NFC = database.reference.child("NFC")
+    val Motor = database.reference.child("Hotel_Motor")
+    val Start = database.reference.child("Start")
+    val go = database.reference.child("Hotel")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,98 +48,31 @@ class Amenity_Page1 : AppCompatActivity() {
         val imageButtonBack = findViewById<ImageButton>(R.id.imageButtonBack)
         val imageButtonEnter = findViewById<ImageButton>(R.id.imageButtonEnter)
         val imageButtonStart = findViewById<ImageButton>(R.id.imageButtonStart)
-        val NFC = database.reference.child("NFC")
-        val Motor = database.reference.child("Hotel_Motor")
-        val Start = database.reference.child("Start")
-        val go = database.reference.child("Hotel")
+
 
         val text_home = findViewById<TextView>(R.id.text_home)
 
 
-
         //버튼 클릭 함수
         fun buttonClick(num: String) {
-            val backKey: String = text_home.text.toString()
-            val newKey = backKey + num
+            val txHome: String = text_home.text.toString()
+            val setNum = txHome + num
 
             text_home.setTextColor(ContextCompat.getColor(this, R.color.purple_CACAE1))
-            Log.d("백키4", newKey)
-
-            if (newKey.length <= 3) {
-                text_home.text = newKey
-                Log.d("백키", newKey)
-                Log.d("백키1", newKey.length.toString())
-
-
-                imageButtonStart.setOnClickListener {
-
-                    if (newKey.isEmpty()) {
-                        makeText(this@Amenity_Page1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    Start.setValue("1")
-                    Start.addValueEventListener(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val Start12 = snapshot.value
-                            val magnetic2 = snapshot.child("Hotel_Magnetic2").value.toString()
-                            val magnetic3 = snapshot.child("Hotel_Magnetic3").value.toString()
-                            val lock1 = Motor.child("Hotel_Lock1")
-                            val lock2 = Motor.child("Hotel_Lock2")
-                            val lock3 = Motor.child("Hotel_Lock3")
-
-                            Log.d("확인", "Value is: $Start12")
-
-                            if (Start12 == "faill" || newKey.length < 3) {
-                                if (newKey.length < 3) {
-                                    makeText(this@Amenity_Page1, "호실을 정해 주세요", Toast.LENGTH_SHORT).show()
-
-                                } else {
-                                    makeText(this@Amenity_Page1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
-                                }
-
-
-                            }
-                            if(Start12 == "success") {
-
-                                makeText(this@Amenity_Page1, "출발합니다.", Toast.LENGTH_SHORT).show()
-                                Motor.addValueEventListener(object : ValueEventListener{
-                                    override fun onDataChange(snapshot: DataSnapshot) {
-                                        val Hotel_Lock1 = snapshot.child("Hotel_Lock1").value.toString()
-                                        val Hotel_Lock2 = snapshot.child("Hotel_Lock2").value.toString()
-                                        val Hotel_Lock3 = snapshot.child("Hotel_Lock3").value.toString()
-                                        if (Hotel_Lock1 == "First_Unlock"){go.child("Lock1").setValue("First_Unlock")}
-                                        if (Hotel_Lock2 == "Second_Unlock"){go.child("Lock2").setValue("Second_Unlock")}
-                                        if (Hotel_Lock3 == "Third_Unlock"){go.child("Lock3").setValue("Third_Unlock")}
-                                    }
-
-                                    override fun onCancelled(error: DatabaseError) {
-                                        TODO("Not yet implemented")
-                                    }
-
-                                })
-                                lock1.setValue("First_Lock")
-                                lock2.setValue("Second_Lock")
-                                lock3.setValue("Third_Lock")
-                                go.child("go").setValue(text_home.text)
-
-                                val intent_Amenity_main = Intent(this@Amenity_Page1,Amenity_Main::class.java)
-                                intent_Amenity_main.putExtra("호실",text_home.text)
-
-                                startActivity(intent_Amenity_main)
-
-                            }
-
-
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
-                        }
-
-
-                    })
+            if (num == "del") {
+                if (text_home.text.isNotEmpty()) {
+                    text_home.text = text_home.text.substring(0, text_home.text.length - 1)
+                } else {
+                    text_home.text = ""
+                }
+            } else {
+                if (setNum.length <= 3) {
+                    text_home.text = setNum
 
                 }
             }
+
+
         }
 
 
@@ -149,100 +87,78 @@ class Amenity_Page1 : AppCompatActivity() {
         imageButton8.setOnClickListener { buttonClick("8") }
         imageButton9.setOnClickListener { buttonClick("9") }
         imageButton10.setOnClickListener { buttonClick("0") }
-//문제있음
-        imageButtonBack.setOnClickListener {
+        imageButtonBack.setOnClickListener { buttonClick("del") }
 
-            val backKey: String = text_home.text.toString()
-            val newKey = backKey
+        imageButtonStart.setOnClickListener {
 
-            Log.d("백키", newKey)
-            if (newKey.length <= 3) {
-                text_home.text = newKey
-                Log.d("백키", newKey)
-                Log.d("백키1", newKey.length.toString())
+            Start.setValue("Question")
 
-                if (backKey.isNotEmpty()) {
+            if (text_home.text.length < 3) {
 
-                    if (backKey.length == 3) {
-                        text_home.text = backKey.substring(0, backKey.length - 1)
-                    } else if (backKey.length == 2) {
-                        text_home.text = backKey.substring(0, backKey.length - 1)
-                    } else {
-                        text_home.text = backKey.substring(0, backKey.length - 1)
+                makeText(this@Amenity_Page1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
 
-                    }
+                Start.setValue("Null")
 
-                }
+            } else if (text_home.text.length == 3) {
 
-                imageButtonStart.setOnClickListener {
-                    Log.d("백키3", newKey.length.toString())
-                    if (newKey.isEmpty()) {
-                        makeText(this@Amenity_Page1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    Start.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            val magnetic1 = snapshot.child("Hotel_Magnetic1").value.toString()
-                            val magnetic2 = snapshot.child("Hotel_Magnetic2").value.toString()
-                            val magnetic3 = snapshot.child("Hotel_Magnetic3").value.toString()
-                            val lock1 = Motor.child("Hotel_Lock1")
-                            val lock2 = Motor.child("Hotel_Lock2")
-                            val lock3 = Motor.child("Hotel_Lock3")
+                Start.addValueEventListener(object : ValueEventListener {
 
-                            Log.d(magnetic1, "Value is: $magnetic1")
+                    override fun onDataChange(snapshot: DataSnapshot) {
 
-                            if (magnetic1 == "First_Unlock" || magnetic2 == "Second_Unlock" || magnetic3 == "Third_Unlock" || newKey.length <=3) {
-                                if (newKey.length < 3) {
-                                    makeText(this@Amenity_Page1, "호실을 정해 주세요", Toast.LENGTH_SHORT).show()
+                        val startValue = snapshot.value
 
-                                } else {
-                                    makeText(this@Amenity_Page1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+                        val lock1 = Motor.child("Hotel_Motor1")
+                        val lock2 = Motor.child("Hotel_Motor2")
+                        val lock3 = Motor.child("Hotel_Motor3")
+
+                        Log.d("확인", "Value is: $startValue")
+
+                        if (startValue == "Fail") {
+
+                            makeText(this@Amenity_Page1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+
+                        } else if (startValue == "Success") {
+                            makeText(this@Amenity_Page1, "출발 합니다.", Toast.LENGTH_SHORT).show()
+
+                            Motor.addValueEventListener(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    val Hotel_Motor1 = snapshot.child("Hotel_Motor1").value.toString()
+                                    val Hotel_Motor2 = snapshot.child("Hotel_Motor2").value.toString()
+                                    val Hotel_Motor3 = snapshot.child("Hotel_Motor3").value.toString()
+                                    if (Hotel_Motor1 == "First_Unlock") {
+                                        go.child("Lock1").setValue("First_Unlock")
+                                    }
+                                    if (Hotel_Motor2 == "Second_Unlock") {
+                                        go.child("Lock2").setValue("Second_Unlock")
+                                    }
+                                    if (Hotel_Motor3 == "Third_Unlock") {
+                                        go.child("Lock3").setValue("Third_Unlock")
+                                    }
+                                    lock1.setValue("First_Lock")
+                                    lock2.setValue("Second_Lock")
+                                    lock3.setValue("Third_Lock")
+                                    go.child("go").setValue(text_home.text)
+
+                                    val intentAmenityPage3 = Intent(this@Amenity_Page1, Amenity_Page3::class.java)
+                                    startActivity(intentAmenityPage3)
                                 }
 
+                                override fun onCancelled(error: DatabaseError) {
 
-                            } else {
-                                Log.d("newKey", newKey.length.toString())
-                                makeText(this@Amenity_Page1, "출발합니다.", Toast.LENGTH_SHORT).show()
-                                Motor.addValueEventListener(object : ValueEventListener{
-                                    override fun onDataChange(snapshot: DataSnapshot) {
-                                        val Hotel_Lock1 = snapshot.child("Hotel_Lock1").value.toString()
-                                        val Hotel_Lock2 = snapshot.child("Hotel_Lock2").value.toString()
-                                        val Hotel_Lock3 = snapshot.child("Hotel_Lock3").value.toString()
-                                        if (Hotel_Lock1 == "First_Unlock"){go.child("Lock1").setValue("First_Unlock")}
-                                        if (Hotel_Lock2 == "Second_Unlock"){go.child("Lock2").setValue("Second_Unlock")}
-                                        if (Hotel_Lock3 == "Third_Unlock"){go.child("Lock3").setValue("Third_Unlock")}
-                                    }
+                                }
 
-                                    override fun onCancelled(error: DatabaseError) {
-                                        TODO("Not yet implemented")
-                                    }
-
-                                })
-                                Log.d("확인",lock2.toString())
-                                Log.d("확인",lock3.toString())
-                                lock1.setValue("First_Lock")
-                                lock2.setValue("Second_Lock")
-                                lock3.setValue("Third_Lock")
-                                go.child("go").setValue(text_home.text)
-                                val intent_Amenity_main = Intent(this@Amenity_Page1,Amenity_Main::class.java)
-                                intent_Amenity_main.putExtra("호실",text_home.text)
-
-                                startActivity(intent_Amenity_main)
-
-                            }
-                            Log.d("마그네틱", magnetic1 + magnetic2 + magnetic3)
-
+                            })
                         }
 
-                        override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
-                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
 
 
-                    })
-
-                }
+                })
             }
-
         }
 
 
@@ -255,7 +171,6 @@ class Amenity_Page1 : AppCompatActivity() {
 
         //NFC
         NFC.addValueEventListener(object : ValueEventListener {
-
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val value = snapshot.value
@@ -291,9 +206,9 @@ class Amenity_Page1 : AppCompatActivity() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val image_lock1 = snapshot.child("Hotel_Lock1").value
-                val image_lock2 = snapshot.child("Hotel_Lock2").value
-                val image_lock3 = snapshot.child("Hotel_Lock3").value
+                val image_lock1 = snapshot.child("Hotel_Motor1").value
+                val image_lock2 = snapshot.child("Hotel_Motor2").value
+                val image_lock3 = snapshot.child("Hotel_Motor3").value
 
                 if (image_lock1 == "First_Lock") {
                     lock1_img.setImageResource(lockImg)
@@ -395,4 +310,5 @@ class Amenity_Page1 : AppCompatActivity() {
 
 
 }
+
 

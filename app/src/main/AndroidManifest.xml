@@ -28,12 +28,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".Main_setting" android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".Amenity_Main"  android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".Amenity_Page1" android:exported="true"  android:screenOrientation="landscape"/>
+        <activity android:name=".Amenity_Page3" android:exported="true"  android:screenOrientation="landscape"/>
+        <activity android:name=".Amenity_Page2" android:exported="true"  android:screenOrientation="landscape"/>
+
         <activity android:name=".Serving_Main"  android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".Serving_page1" android:exported="true"  android:screenOrientation="landscape"/>
+
         <activity android:name=".Main_loading" android:exported="true"  android:screenOrientation="landscape"/>
+
 <!--        <activity android:name=".QR" android:exported="true"  android:screenOrientation="landscape"/>-->
 
 
