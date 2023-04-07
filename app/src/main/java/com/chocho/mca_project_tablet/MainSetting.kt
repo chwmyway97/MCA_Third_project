@@ -6,7 +6,7 @@ import android.widget.Button
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class Main_setting : AppCompatActivity() {
+class MainSetting : AppCompatActivity() {
 
     private val database = Firebase.database
 

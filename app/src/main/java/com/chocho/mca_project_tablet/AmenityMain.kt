@@ -7,9 +7,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import com.google.zxing.integration.android.IntentIntegrator
 
 class AmenityMain : AppCompatActivity() {
 
@@ -28,7 +25,7 @@ class AmenityMain : AppCompatActivity() {
 
         val robot = findViewById<ConstraintLayout>(R.id.Robot)
         robot.setOnClickListener {
-            val netPageIntent = Intent(this, Amenity_Page1::class.java)
+            val netPageIntent = Intent(this, AmenityPage1::class.java)
             startActivity(netPageIntent)
         }
 

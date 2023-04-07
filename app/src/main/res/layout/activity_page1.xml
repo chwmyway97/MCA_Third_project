@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_0A0813"
-    tools:context=".Amenity_Page1">
+    tools:context=".AmenityPage1">
 
     <ImageView
         android:id="@+id/imageView"

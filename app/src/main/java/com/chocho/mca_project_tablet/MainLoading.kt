@@ -48,12 +48,11 @@ class MainLoading : AppCompatActivity() {
         Glide 라이브러리
         load 메소드 : 이미지 로드할 위치 지정
         into 메소드 : 이미지 로드후 표시할 이미지 지정
-        **/
+         **/
         Glide.with(this).load(R.raw.loading_lavender).into(progressBar)
 
         /** int 형 2147483648 이상이면 Long 타입  **/
-        delayMillis = 1000L
-
+        delayMillis = 100L
 
         startCountdown(delayMillis, 1000, txLoading, progressBar, percent, mainIntentKey, this)
 
@@ -66,7 +65,6 @@ class MainLoading : AppCompatActivity() {
                 "1" -> startActivity(intentAmenity)
                 "2" -> startActivity(intentServing)
             }
-
         }, delayMillis)
 
 
@@ -87,32 +85,16 @@ class MainLoading : AppCompatActivity() {
                 val p = (1 - seconds.toDouble() / (millisInFuture / 1000)) * 100
                 val currentPercent = p.toInt()
 
-                textView.text = "$currentPercent%" // 현재 진행된 퍼센트값으로 textView 갱신
+                textView.text = "$currentPercent%"
 
-                // 전체 퍼센트 0부터 100까지의 값을 for문을 이용하여 모두 표시
-                for (i in 0..100) {
-                    if (currentPercent == i) {
-                        Log.d("전체 퍼센트", "$i%")
-                        break
-                    }
-                }
+                Log.d("전체 퍼센트", "$currentPercent%")
             }
 
             override fun onFinish() {
-                Log.d("확인용",value.toString())
-                if (value == "None") {
-                    activity.startActivity(Intent(activity, Main::class.java))
-                }
-                if (value == "Hotel") {
-                    val Intent_Amenity = Intent(activity, AmenityMain::class.java)
-
-                    startActivity(Intent_Amenity)
-
-                }
-                if (value == "Serving") {
-                    val Intent_Serving = Intent(activity, ServingMain::class.java)
-
-                    startActivity(Intent_Serving)
+                when (value) {
+                    "None" -> activity.startActivity(Intent(activity, Main::class.java))
+                    "Hotel" -> activity.startActivity(Intent(activity, AmenityMain::class.java))
+                    "Serving" -> activity.startActivity(Intent(activity, ServingMain::class.java))
                 }
                 activity.finish()
             }

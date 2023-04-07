@@ -17,7 +17,9 @@ class Main : AppCompatActivity() {
     private val database = Firebase.database
     private val nfc = database.reference.child("NFC")
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         //xml에서 가져오기
@@ -50,9 +52,7 @@ class Main : AppCompatActivity() {
                         startActivity(intentLoding)
                     }
 
-
                 }
-
 
                 Log.d("nfcValue", "Value is: $nfcValue") // nfcValue 값 확인
             }
@@ -62,7 +62,5 @@ class Main : AppCompatActivity() {
             }
 
         })
-
-
     }
 }

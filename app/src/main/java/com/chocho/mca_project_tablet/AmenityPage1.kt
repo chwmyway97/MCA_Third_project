@@ -22,17 +22,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class Amenity_Page1 : AppCompatActivity() {
+class AmenityPage1 : AppCompatActivity() {
 
     private val database = Firebase.database
     val NFC = database.reference.child("NFC")
     val Motor = database.reference.child("Hotel_Motor")
     val Start = database.reference.child("Start")
-    val go = database.reference.child("Hotel")
+    val Hotel = database.reference.child("Hotel")
+    val unLockImg = R.drawable.img_lock7
+    val lockImg = R.drawable.img_lock2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_page1)
+
 
         val imageButton1 = findViewById<ImageButton>(R.id.imageButton1)
         val imageButton2 = findViewById<ImageButton>(R.id.imageButton2)
@@ -47,6 +50,10 @@ class Amenity_Page1 : AppCompatActivity() {
         val imageButtonBack = findViewById<ImageButton>(R.id.imageButtonBack)
         val imageButtonEnter = findViewById<ImageButton>(R.id.imageButtonEnter)
         val imageButtonStart = findViewById<ImageButton>(R.id.imageButtonStart)
+
+        val lock1Img = findViewById<ImageView>(R.id.lock1)
+        val lock2Img = findViewById<ImageView>(R.id.lock2)
+        val lock3Img = findViewById<ImageView>(R.id.lock3)
 
 
         val text_home = findViewById<TextView>(R.id.text_home)
@@ -74,7 +81,6 @@ class Amenity_Page1 : AppCompatActivity() {
 
         }
 
-
         //버튼 클릭
         imageButton1.setOnClickListener { buttonClick("1") }
         imageButton2.setOnClickListener { buttonClick("2") }
@@ -88,13 +94,14 @@ class Amenity_Page1 : AppCompatActivity() {
         imageButton10.setOnClickListener { buttonClick("0") }
         imageButtonBack.setOnClickListener { buttonClick("del") }
 
+        //로봇 이동
         imageButtonStart.setOnClickListener {
 
             Start.setValue("Question")
 
             if (text_home.text.length < 3) {
 
-                makeText(this@Amenity_Page1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
+                makeText(this@AmenityPage1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
 
                 Start.setValue("Null")
 
@@ -114,10 +121,10 @@ class Amenity_Page1 : AppCompatActivity() {
 
                         if (startValue == "Fail") {
 
-                            makeText(this@Amenity_Page1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+                            makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
 
                         } else if (startValue == "Success") {
-                            makeText(this@Amenity_Page1, "출발 합니다.", Toast.LENGTH_SHORT).show()
+                            makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
 
                             Motor.addValueEventListener(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -125,20 +132,20 @@ class Amenity_Page1 : AppCompatActivity() {
                                     val Hotel_Motor2 = snapshot.child("Hotel_Motor2").value.toString()
                                     val Hotel_Motor3 = snapshot.child("Hotel_Motor3").value.toString()
                                     if (Hotel_Motor1 == "First_Unlock") {
-                                        go.child("Lock1").setValue("First_Unlock")
+                                        Hotel.child("Lock1").setValue("First_Unlock")
                                     }
                                     if (Hotel_Motor2 == "Second_Unlock") {
-                                        go.child("Lock2").setValue("Second_Unlock")
+                                        Hotel.child("Lock2").setValue("Second_Unlock")
                                     }
                                     if (Hotel_Motor3 == "Third_Unlock") {
-                                        go.child("Lock3").setValue("Third_Unlock")
+                                        Hotel.child("Lock3").setValue("Third_Unlock")
                                     }
                                     lock1.setValue("First_Lock")
                                     lock2.setValue("Second_Lock")
                                     lock3.setValue("Third_Lock")
-                                    go.child("go").setValue(text_home.text)
+                                    Hotel.child("go").setValue(text_home.text)
 
-                                    val intentAmenityPage3 = Intent(this@Amenity_Page1, Amenity_Page3::class.java)
+                                    val intentAmenityPage3 = Intent(this@AmenityPage1, Amenity_Page3::class.java)
                                     startActivity(intentAmenityPage3)
                                 }
 
@@ -160,13 +167,11 @@ class Amenity_Page1 : AppCompatActivity() {
             }
         }
 
-
         //잠금장치 클릭시
         imageButtonEnter.setOnClickListener {
             val bottomSheet = BottomSheetFragment()
             bottomSheet.show(supportFragmentManager, BottomSheetFragment.TAG)
         }
-
 
         //NFC
         NFC.addValueEventListener(object : ValueEventListener {
@@ -175,13 +180,13 @@ class Amenity_Page1 : AppCompatActivity() {
                 val value = snapshot.value
 
                 if (value == "None") {
-                    val Main = Intent(this@Amenity_Page1, MainLoading::class.java)
+                    val Main = Intent(this@AmenityPage1, MainLoading::class.java)
                     Main.putExtra("key1", "0")
                     startActivity(Main)
                 }
                 Log.d("파이어", "Value is: $value")
                 if (value == "Serving") {
-                    val Intent_Serving = Intent(this@Amenity_Page1, MainLoading::class.java)
+                    val Intent_Serving = Intent(this@AmenityPage1, MainLoading::class.java)
                     Intent_Serving.putExtra("key1", "2")
                     startActivity(Intent_Serving)
                 }
@@ -194,35 +199,29 @@ class Amenity_Page1 : AppCompatActivity() {
 
         })
 
-        val unLockImg = R.drawable.img_lock7
-        val lockImg = R.drawable.img_lock2
-        val lock1_img = findViewById<ImageView>(R.id.lock1)
-        val lock2_img = findViewById<ImageView>(R.id.lock2)
-        val lock3_img = findViewById<ImageView>(R.id.lock3)
-
-
+        //잠금장치 이미지 넣기 위한
         Motor.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val image_lock1 = snapshot.child("Hotel_Motor1").value
-                val image_lock2 = snapshot.child("Hotel_Motor2").value
-                val image_lock3 = snapshot.child("Hotel_Motor3").value
+                val imageLock1 = snapshot.child("Hotel_Motor1").value
+                val imageLock2 = snapshot.child("Hotel_Motor2").value
+                val imageLock3 = snapshot.child("Hotel_Motor3").value
 
-                if (image_lock1 == "First_Lock") {
-                    lock1_img.setImageResource(lockImg)
+                if (imageLock1 == "First_Lock") {
+                    lock1Img.setImageResource(lockImg)
                 } else {
-                    lock1_img.setImageResource(unLockImg)
+                    lock1Img.setImageResource(unLockImg)
                 }
-                if (image_lock2 == "Second_Lock") {
-                    lock2_img.setImageResource(lockImg)
+                if (imageLock2 == "Second_Lock") {
+                    lock2Img.setImageResource(lockImg)
                 } else {
-                    lock2_img.setImageResource(unLockImg)
+                    lock2Img.setImageResource(unLockImg)
                 }
-                if (image_lock3 == "Third_Lock") {
-                    lock3_img.setImageResource(lockImg)
+                if (imageLock3 == "Third_Lock") {
+                    lock3Img.setImageResource(lockImg)
                 } else {
-                    lock3_img.setImageResource(unLockImg)
+                    lock3Img.setImageResource(unLockImg)
                 }
             }
 
@@ -231,7 +230,6 @@ class Amenity_Page1 : AppCompatActivity() {
             }
 
         })
-
 
         //Thread 이용하여 매초마다 업데이트 되는 방식
         val t: Thread = object : Thread() {
@@ -248,7 +246,7 @@ class Amenity_Page1 : AppCompatActivity() {
         t.start()
     }
 
-
+    //배터리 & 시간
     private fun updateYOURthing() {
 
         //시간
@@ -291,6 +289,7 @@ class Amenity_Page1 : AppCompatActivity() {
 
     }
 
+    //
     fun someFunction(returnData: String) {
         val Image_battery = findViewById<ImageFilterView>(R.id.Image_battery)
         // returnData 값이 변경될 때마다 호출되는 코드 블록
@@ -298,11 +297,13 @@ class Amenity_Page1 : AppCompatActivity() {
             // 이미지를 변경하는 코드
             Image_battery.setImageResource(R.drawable.battery_full)
         }
-        if (returnData.toInt() < 100) {
+        if ( returnData.toInt() > 70) {
             Image_battery.setImageResource(R.drawable.battery_threequarter)
-        } else if (returnData.toInt() <= 50) {
+        } else if (returnData.toInt() >= 50) {
             Image_battery.setImageResource(R.drawable.battery_half)
-        } else if (returnData.toInt() <= 30) {
+        } else if (returnData.toInt() >= 30) {
+            Image_battery.setImageResource(R.drawable.battery_low)
+        } else{
             Image_battery.setImageResource(R.drawable.battery_low)
         }
     }

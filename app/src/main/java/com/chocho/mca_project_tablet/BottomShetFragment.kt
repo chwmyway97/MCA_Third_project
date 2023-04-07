@@ -9,17 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.database.*
 import java.lang.Math.min
-import java.util.concurrent.locks.Lock
 
 // 상수 선언
 private const val PREFS_FILENAME = "com.chocho.myapp.prefs"
@@ -34,7 +29,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
     // Firebase
     private lateinit var database: FirebaseDatabase
-    private lateinit var lock: DatabaseReference
+    private lateinit var motor: DatabaseReference
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_bottom_sheet, container, false)
@@ -60,11 +55,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         // Firebase
         database = FirebaseDatabase.getInstance()
-        lock = database.getReference("Hotel_Lock")
+        motor = database.getReference("Hotel_Motor")
 
-        val lock1 = lock.child("Hotel_Lock1")
-        val lock2 = lock.child("Hotel_Lock2")
-        val lock3 = lock.child("Hotel_Lock3")
+        val motor1 = motor.child("Hotel_Motor1")
+        val motor2 = motor.child("Hotel_Motor2")
+        val motor3 = motor.child("Hotel_Motor3")
 
         val btn_lock1 = view.findViewById<ImageButton>(R.id.btn_lock1)
         val btn_lock2 = view.findViewById<ImageButton>(R.id.btn_lock2)
@@ -74,13 +69,13 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val lockImg = R.drawable.img_lock3
 
 
-        lock.addValueEventListener(object : ValueEventListener {
+        motor.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val image_lock1 = snapshot.child("Hotel_Lock1").value
-                val image_lock2 = snapshot.child("Hotel_Lock2").value
-                val image_lock3 = snapshot.child("Hotel_Lock3").value
+                val image_lock1 = snapshot.child("Hotel_Motor1").value
+                val image_lock2 = snapshot.child("Hotel_Motor2").value
+                val image_lock3 = snapshot.child("Hotel_Motor3").value
 
                 if (image_lock1 == "First_Lock") {
                     btn_lock1.setImageResource(lockImg)
@@ -131,17 +126,17 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         btn_lock1?.setOnClickListener {
-            lock1.addListenerForSingleValueEvent(object : ValueEventListener {
+            motor1.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val value = snapshot.value.toString()
 
                     // lock 값이 0이면 1로 업데이트, 1이면 0으로 업데이트
                     if (value == "First_Lock") {
-                        lock1.setValue("First_Unlock")
+                        motor1.setValue("First_Unlock")
                         btn_lock1.setImageResource(unLockImg)
                         prefs?.edit()?.putBoolean(LOCK1_KEY, true)?.apply()
                     } else {
-                        lock1.setValue("First_Lock")
+                        motor1.setValue("First_Lock")
                         btn_lock1.setImageResource(lockImg)
                         prefs?.edit()?.putBoolean(LOCK1_KEY, false)?.apply()
                     }
@@ -153,17 +148,17 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             })
         }
         btn_lock2?.setOnClickListener {
-            lock2.addListenerForSingleValueEvent(object : ValueEventListener {
+            motor2.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val value = snapshot.value.toString()
 
                     // lock 값이 0이면 1로 업데이트, 1이면 0으로 업데이트
                     if (value == "Second_Lock") {
-                        lock2.setValue("Second_Unlock")
+                        motor2.setValue("Second_Unlock")
                         btn_lock2.setImageResource(unLockImg)
                         prefs?.edit()?.putBoolean(LOCK2_KEY, true)?.apply()
                     } else {
-                        lock2.setValue("Second_Lock")
+                        motor2.setValue("Second_Lock")
                         btn_lock2.setImageResource(lockImg)
                         prefs?.edit()?.putBoolean(LOCK2_KEY, false)?.apply()
                     }
@@ -175,17 +170,17 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
             })
         }
         btn_lock3?.setOnClickListener {
-            lock3.addListenerForSingleValueEvent(object : ValueEventListener {
+            motor3.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val value = snapshot.value.toString()
 
                     // lock 값이 0이면 1로 업데이트, 1이면 0으로 업데이트
                     if (value == "Third_Lock") {
-                        lock3.setValue("Third_Unlock")
+                        motor3.setValue("Third_Unlock")
                         btn_lock3.setImageResource(unLockImg)
                         prefs?.edit()?.putBoolean(LOCK3_KEY, true)?.apply()
                     } else {
-                        lock3.setValue("Third_Lock")
+                        motor3.setValue("Third_Lock")
                         btn_lock3.setImageResource(lockImg)
                         prefs?.edit()?.putBoolean(LOCK3_KEY, false)?.apply()
                     }
