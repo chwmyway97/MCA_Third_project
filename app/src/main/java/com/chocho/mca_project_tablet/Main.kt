@@ -13,46 +13,52 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class Main : AppCompatActivity() {
+
+    private val database = Firebase.database
+    private val nfc = database.reference.child("NFC")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //xml에서 가져오기
         val robot = findViewById<ConstraintLayout>(R.id.Robot)
-        robot.setOnClickListener {
-            Toast.makeText(this,"메인페이지",Toast.LENGTH_SHORT).show()
-        }
 
+        //MainLoading 이동
+        val intentLoding = Intent(this@Main, MainLoading::class.java)
 
-        val database = Firebase.database
-        val myRef = database.reference.child("NFC")
+        //메인페이지 클릭시 토스트메세지
+        robot.setOnClickListener { Toast.makeText(this, "메인페이지", Toast.LENGTH_SHORT).show() }
 
-
-
-
-
-        myRef.addValueEventListener(object: ValueEventListener {
+        //nfc파이어베이스
+        nfc.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value = snapshot.value
 
-                if (value == "Hotel"){
-                    val Intent_Amenity = Intent(this@Main,Main_loading::class.java)
-                    Intent_Amenity.putExtra("key1","1")
-                    startActivity(Intent_Amenity)
+                val nfcValue = snapshot.value // nfcValue 값
+
+                when (nfcValue) {
+
+                    // 로딩_호텔(1)
+                    "Hotel" -> {
+                        intentLoding.putExtra("key1", "1")
+                        startActivity(intentLoding)
+                    }
+
+                    // 로딩_서빙(2)
+                    "Serving" -> {
+                        intentLoding.putExtra("key1", "2")
+                        startActivity(intentLoding)
+                    }
+
+
                 }
 
-                if (value == "Serving"){
-                    val Intent_Serving = Intent(this@Main,Main_loading::class.java)
-                    Intent_Serving.putExtra("key1","2")
-                    startActivity(Intent_Serving)
-                }
-                Log.d("파이어", "Value is: $value")
+
+                Log.d("nfcValue", "Value is: $nfcValue") // nfcValue 값 확인
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.w("파이어", "Failed to read value.", error.toException())
+                Log.w("nfcValue", "Failed to read value.", error.toException())
             }
 
         })

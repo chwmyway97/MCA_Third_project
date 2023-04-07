@@ -7,76 +7,65 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import java.util.*
-import kotlin.concurrent.timer
 
-class Main_loading : AppCompatActivity() {
+class MainLoading : AppCompatActivity() {
 
-    var timer: Timer? = null
-    var deltaTime = 0
-
+    private var delayMillis = 0L
+    private var percent = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loading)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowHomeEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        //각 화면에서 온 값 도착
+        val mainIntentKey = intent.getStringExtra("key1")
+        Log.d("mainIntentKey", mainIntentKey.toString()) // 잘 도착했는지 확인
 
-
-        val value = intent.getStringExtra("key1")
-        val textView = findViewById<TextView>(R.id.TextView_loading)
-
-        Log.d("key1", value.toString())
-
-
+        //xml에서 가져오기
+        val txLoading = findViewById<TextView>(R.id.txLoading)
         val progressBar = findViewById<ImageView>(R.id.progressBar)
+
+        //intent 값들
+        val main = Intent(this, Main::class.java)
+        val intentAmenity = Intent(this, AmenityMain::class.java)
+        val intentServing = Intent(this, ServingMain::class.java)
+
+        //액티비티에서 제공하는 앱바를 제어하는 객체입니다.
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowHomeEnabled(false)
+        }
+
+        /**
+        with함수 코틀린에서 제공하는 스코프 함수 중 하나, 특정 객체를 선택한 뒤 해당 객체를
+        lambda 식의 매개변수로 전달하는 함수  this = MainLoading(객체)
+
+        Glide 라이브러리
+        load 메소드 : 이미지 로드할 위치 지정
+        into 메소드 : 이미지 로드후 표시할 이미지 지정
+        **/
         Glide.with(this).load(R.raw.loading_lavender).into(progressBar)
-        textView.text = "Loading..."
 
-//        TimerFun()
-
-        val delayMillis = 100L
-        var percent = 0
-
-        startCountdown(delayMillis, 1000, textView, progressBar, percent, value, this)
+        /** int 형 2147483648 이상이면 Long 타입  **/
+        delayMillis = 1000L
 
 
+        startCountdown(delayMillis, 1000, txLoading, progressBar, percent, mainIntentKey, this)
 
         Handler(Looper.myLooper()!!).postDelayed({
-            val progressBar = findViewById<ImageView>(R.id.progressBar)
-
-
-            val Main = Intent(this, Main::class.java)
-            val Intent_Amenity = Intent(this, Amenity_Main::class.java)
-            val Intent_Serving = Intent(this, Serving_Main::class.java)
 
             progressBar.isVisible = false
 
-            if (value == "0") {
-                startActivity(Main)
-                finish()
+            when (mainIntentKey) {
+                "0" -> startActivity(main)
+                "1" -> startActivity(intentAmenity)
+                "2" -> startActivity(intentServing)
             }
-            if (value == "1") {
-                Intent_Amenity.putExtra("key10","10")
-                startActivity(Intent_Amenity)
-
-            }
-            if (value == "2") {
-                Intent_Serving.putExtra("key1","1")
-                startActivity(Intent_Serving)
-                finish()
-            }
-
-
-            Log.d("딜리미터", percent.toString())
-            finish()
 
         }, delayMillis)
 
@@ -108,31 +97,27 @@ class Main_loading : AppCompatActivity() {
                     }
                 }
             }
+
             override fun onFinish() {
+                Log.d("확인용",value.toString())
                 if (value == "None") {
                     activity.startActivity(Intent(activity, Main::class.java))
                 }
                 if (value == "Hotel") {
-                    val Intent_Amenity = Intent(activity, Amenity_Main::class.java)
-                    Intent_Amenity.putExtra("key10","10")
+                    val Intent_Amenity = Intent(activity, AmenityMain::class.java)
+
                     startActivity(Intent_Amenity)
-//                    activity.startActivity(Intent(activity, Amenity_Main::class.java))
+
                 }
                 if (value == "Serving") {
-                    val Intent_Serving = Intent(activity, Serving_Main::class.java)
-                    Intent_Serving.putExtra("key11","11")
+                    val Intent_Serving = Intent(activity, ServingMain::class.java)
+
                     startActivity(Intent_Serving)
-//                    activity.startActivity(Intent(activity, Serving_Main::class.java))
                 }
                 activity.finish()
             }
         }.start()
     }
-
-
-
-
-
 
     override fun onDestroy() {
         super.onDestroy()

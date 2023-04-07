@@ -12,7 +12,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class Serving_Main : AppCompatActivity() {
+class ServingMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,10 +22,7 @@ class Serving_Main : AppCompatActivity() {
             val netPageIntent = Intent(this, Serving_page1::class.java)
             startActivity(netPageIntent)
         }
-        val ExtraString = intent.getStringExtra("key11")
-        if(ExtraString == "11" ) {
-            Toast.makeText(this,"서빙", Toast.LENGTH_SHORT).show()
-        }
+
 
 
 
@@ -40,12 +37,12 @@ class Serving_Main : AppCompatActivity() {
                 val value = snapshot.value
 
                 if (value == "None"){
-                    val Intent_Main = Intent(this@Serving_Main,Main::class.java)
+                    val Intent_Main = Intent(this@ServingMain,Main::class.java)
                     startActivity(Intent_Main)
                 }
 
                 if (value == "Hotel"){
-                    val Intent_Amenity = Intent(this@Serving_Main,Amenity_Main::class.java)
+                    val Intent_Amenity = Intent(this@ServingMain,AmenityMain::class.java)
                     startActivity(Intent_Amenity)
                 }
 

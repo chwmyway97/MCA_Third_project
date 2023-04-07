@@ -72,7 +72,7 @@ class Amenity_Page2 : AppCompatActivity() {
 
                     Toast.makeText(this@Amenity_Page2, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
                 }else if (start == "Success") {
-                    val intent = Intent(this@Amenity_Page2,Amenity_Main::class.java)
+                    val intent = Intent(this@Amenity_Page2,AmenityMain::class.java)
                     startActivity(intent)
                     Toast.makeText(this@Amenity_Page2, "출발합니다.", Toast.LENGTH_SHORT).show()}
             }

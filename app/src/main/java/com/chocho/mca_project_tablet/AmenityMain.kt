@@ -6,28 +6,34 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.zxing.integration.android.IntentIntegrator
 
-class Serving_page1 : AppCompatActivity() {
+class AmenityMain : AppCompatActivity() {
+
+    private lateinit var database: FirebaseDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Toast.makeText(this,"어메니티", Toast.LENGTH_SHORT).show()
+
+        database = FirebaseDatabase.getInstance()
+
+        val NFC = database.reference.child("NFC")
+
+
         val robot = findViewById<ConstraintLayout>(R.id.Robot)
         robot.setOnClickListener {
-            Toast.makeText(this,"서빙페이지", Toast.LENGTH_SHORT).show()
+            val netPageIntent = Intent(this, Amenity_Page1::class.java)
+            startActivity(netPageIntent)
         }
 
 
-        val database = Firebase.database
-        val myRef = database.reference.child("NFC")
-
-
-        myRef.addValueEventListener(object: ValueEventListener {
+        NFC.addValueEventListener(object: ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 // This method is called once with the initial value and again
@@ -35,15 +41,16 @@ class Serving_page1 : AppCompatActivity() {
                 val value = snapshot.value
 
                 if (value == "None"){
-                    val Intent_Main = Intent(this@Serving_page1,Main::class.java)
-                    startActivity(Intent_Main)
+                    val Main = Intent(this@AmenityMain,MainLoading::class.java)
+                    Main.putExtra("key1","0")
+                    startActivity(Main)
                 }
-
-                if (value == "Hotel"){
-                    val Intent_Amenity = Intent(this@Serving_page1,AmenityMain::class.java)
-                    startActivity(Intent_Amenity)
+                Log.d("파이어", "Value is: $value")
+                if (value == "Serving"){
+                    val Intent_Serving = Intent(this@AmenityMain,MainLoading::class.java)
+                    Intent_Serving.putExtra("key1","2")
+                    startActivity(Intent_Serving)
                 }
-
                 Log.d("파이어", "Value is: $value")
             }
 
@@ -54,5 +61,8 @@ class Serving_page1 : AppCompatActivity() {
         })
 
 
+
     }
+
+
 }

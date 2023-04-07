@@ -1,6 +1,5 @@
 package com.chocho.mca_project_tablet
 
-import android.Manifest.permission.NFC
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
@@ -176,13 +175,13 @@ class Amenity_Page1 : AppCompatActivity() {
                 val value = snapshot.value
 
                 if (value == "None") {
-                    val Main = Intent(this@Amenity_Page1, Main_loading::class.java)
+                    val Main = Intent(this@Amenity_Page1, MainLoading::class.java)
                     Main.putExtra("key1", "0")
                     startActivity(Main)
                 }
                 Log.d("파이어", "Value is: $value")
                 if (value == "Serving") {
-                    val Intent_Serving = Intent(this@Amenity_Page1, Main_loading::class.java)
+                    val Intent_Serving = Intent(this@Amenity_Page1, MainLoading::class.java)
                     Intent_Serving.putExtra("key1", "2")
                     startActivity(Intent_Serving)
                 }
