@@ -52,7 +52,7 @@ class MainLoading : AppCompatActivity() {
         Glide.with(this).load(R.raw.loading_lavender).into(progressBar)
 
         /** int 형 2147483648 이상이면 Long 타입  **/
-        delayMillis = 100L
+        delayMillis = 2000L
 
         startCountdown(delayMillis, 1000, txLoading, progressBar, percent, mainIntentKey, this)
 

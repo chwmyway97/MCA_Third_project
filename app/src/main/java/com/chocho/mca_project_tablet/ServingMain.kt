@@ -17,6 +17,8 @@ class ServingMain : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Toast.makeText(this,"서빙", Toast.LENGTH_SHORT).show()
+
         val robot = findViewById<ConstraintLayout>(R.id.Robot)
         robot.setOnClickListener {
             val netPageIntent = Intent(this, Serving_page1::class.java)

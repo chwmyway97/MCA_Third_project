@@ -18,14 +18,11 @@ import java.lang.Math.min
 
 // 상수 선언
 private const val PREFS_FILENAME = "com.chocho.myapp.prefs"
-private const val LOCK1_KEY = "Hotel_Lock1"
-private const val LOCK2_KEY = "Hotel_Lock2"
-private const val LOCK3_KEY = "Hotel_Lock3"
+private const val MOTOR1KEY = "Hotel_Motor1"
+private const val MOTOR2KEY = "Hotel_Motor2"
+private const val MOTOR3KEY = "Hotel_Motor3"
 
 class BottomSheetFragment : BottomSheetDialogFragment() {
-
-
-    private var mBottomBehavior: BottomSheetBehavior<*>? = null
 
     // Firebase
     private lateinit var database: FirebaseDatabase
@@ -104,9 +101,9 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val prefs = context?.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
 
         // lock1 값이 저장된 SharedPreferences에서 가져오기
-        val lock1Pref = prefs?.getBoolean(LOCK1_KEY, false)
-        val lock2Pref = prefs?.getBoolean(LOCK2_KEY, false)
-        val lock3Pref = prefs?.getBoolean(LOCK3_KEY, false)
+        val lock1Pref = prefs?.getBoolean(MOTOR1KEY, false)
+        val lock2Pref = prefs?.getBoolean(MOTOR2KEY, false)
+        val lock3Pref = prefs?.getBoolean(MOTOR3KEY, false)
 
         // 기존 상태 적용
         if (lock1Pref == true) {
@@ -134,11 +131,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     if (value == "First_Lock") {
                         motor1.setValue("First_Unlock")
                         btn_lock1.setImageResource(unLockImg)
-                        prefs?.edit()?.putBoolean(LOCK1_KEY, true)?.apply()
+                        prefs?.edit()?.putBoolean(MOTOR1KEY, true)?.apply()
                     } else {
                         motor1.setValue("First_Lock")
                         btn_lock1.setImageResource(lockImg)
-                        prefs?.edit()?.putBoolean(LOCK1_KEY, false)?.apply()
+                        prefs?.edit()?.putBoolean(MOTOR1KEY, false)?.apply()
                     }
                 }
 
@@ -156,11 +153,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     if (value == "Second_Lock") {
                         motor2.setValue("Second_Unlock")
                         btn_lock2.setImageResource(unLockImg)
-                        prefs?.edit()?.putBoolean(LOCK2_KEY, true)?.apply()
+                        prefs?.edit()?.putBoolean(MOTOR2KEY, true)?.apply()
                     } else {
                         motor2.setValue("Second_Lock")
                         btn_lock2.setImageResource(lockImg)
-                        prefs?.edit()?.putBoolean(LOCK2_KEY, false)?.apply()
+                        prefs?.edit()?.putBoolean(MOTOR2KEY, false)?.apply()
                     }
                 }
 
@@ -178,11 +175,11 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
                     if (value == "Third_Lock") {
                         motor3.setValue("Third_Unlock")
                         btn_lock3.setImageResource(unLockImg)
-                        prefs?.edit()?.putBoolean(LOCK3_KEY, true)?.apply()
+                        prefs?.edit()?.putBoolean(MOTOR3KEY, true)?.apply()
                     } else {
                         motor3.setValue("Third_Lock")
                         btn_lock3.setImageResource(lockImg)
-                        prefs?.edit()?.putBoolean(LOCK3_KEY, false)?.apply()
+                        prefs?.edit()?.putBoolean(MOTOR3KEY, false)?.apply()
                     }
                 }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Amenity_Page2"
+    tools:context=".AmenityPage2"
     android:background="@color/black_0A0813"
     >
 

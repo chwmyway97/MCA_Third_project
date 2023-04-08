@@ -16,7 +16,7 @@ class AmenityMain : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Toast.makeText(this,"어메니티", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,"호텔", Toast.LENGTH_SHORT).show()
 
         database = FirebaseDatabase.getInstance()
 

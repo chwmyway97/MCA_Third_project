@@ -31,8 +31,8 @@
         <activity android:name=".MainSetting" android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".AmenityMain"  android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".AmenityPage1" android:exported="true"  android:screenOrientation="landscape"/>
-        <activity android:name=".Amenity_Page3" android:exported="true"  android:screenOrientation="landscape"/>
-        <activity android:name=".Amenity_Page2" android:exported="true"  android:screenOrientation="landscape"/>
+        <activity android:name=".AmenityPage3" android:exported="true"  android:screenOrientation="landscape"/>
+        <activity android:name=".AmenityPage2" android:exported="true"  android:screenOrientation="landscape"/>
 
         <activity android:name=".ServingMain"  android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".Serving_page1" android:exported="true"  android:screenOrientation="landscape"/>

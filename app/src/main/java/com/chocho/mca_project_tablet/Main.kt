@@ -22,6 +22,8 @@ class Main : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
+        Toast.makeText(this,"연결 안됨", Toast.LENGTH_SHORT).show()
+
         //xml에서 가져오기
         val robot = findViewById<ConstraintLayout>(R.id.Robot)
 

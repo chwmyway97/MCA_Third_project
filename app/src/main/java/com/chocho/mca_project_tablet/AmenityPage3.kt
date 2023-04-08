@@ -1,11 +1,8 @@
 package com.chocho.mca_project_tablet
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
@@ -14,7 +11,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.zxing.integration.android.IntentIntegrator
 
-class Amenity_Page3 : AppCompatActivity() {
+class AmenityPage3 : AppCompatActivity() {
 
 
     val database = FirebaseDatabase.getInstance()
@@ -32,7 +29,7 @@ class Amenity_Page3 : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.value == "QR") {
                     //큐얼코드 리더기 추가
-                    val integrator = IntentIntegrator(this@Amenity_Page3)
+                    val integrator = IntentIntegrator(this@AmenityPage3)
                     integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
                     integrator.setPrompt("Scan a QR code")
                     integrator.setOrientationLocked(false)
@@ -64,14 +61,13 @@ class Amenity_Page3 : AppCompatActivity() {
                         if (scannedData == Hotel.toString()){
 
                             Log.d("호텔",scannedData)
-                            Toast.makeText(this@Amenity_Page3,"확인됨",Toast.LENGTH_LONG).show()
-                            QR.removeValue()
-                            val intent =Intent(this@Amenity_Page3,Amenity_Page2::class.java)
+                            Toast.makeText(this@AmenityPage3,"확인됨",Toast.LENGTH_LONG).show()
+                            val intent =Intent(this@AmenityPage3,AmenityPage2::class.java)
                             startActivity(intent)
 
 
                         }else{
-                            Toast.makeText(this@Amenity_Page3,"실패",Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@AmenityPage3,"실패",Toast.LENGTH_LONG).show()
                             // 실패한 경우 QR 코드 리더기 다시 시작
                             QR.removeValue()
                             QR.setValue("QR")
@@ -94,7 +90,10 @@ class Amenity_Page3 : AppCompatActivity() {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
 
+    }
 
 }
 

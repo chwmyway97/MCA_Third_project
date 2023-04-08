@@ -10,7 +10,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class Amenity_Page2 : AppCompatActivity() {
+class AmenityPage2 : AppCompatActivity() {
 
     private val database = Firebase.database
     val unLockImg = R.drawable.img_lock7
@@ -27,6 +27,8 @@ class Amenity_Page2 : AppCompatActivity() {
         val img_motor2 = findViewById<ImageView>(R.id.lock7)
         val img_motor3 = findViewById<ImageView>(R.id.lock8)
 
+
+
         Start.setValue("Question")
         Hotel.addValueEventListener(object : ValueEventListener {
 
@@ -36,6 +38,8 @@ class Amenity_Page2 : AppCompatActivity() {
                 val image_lock2 = snapshot.child("Lock2").value
                 val image_lock3 = snapshot.child("Lock3").value
 
+
+
                 Log.d("image_lock3", image_lock3.toString())
 
 
@@ -43,16 +47,19 @@ class Amenity_Page2 : AppCompatActivity() {
                 if (image_lock1 == "First_Unlock") {
                     img_motor1.setImageResource(unLockImg)
 
+
                 } else {
                     img_motor1.setImageResource(lockImg)
                 }
                 if (image_lock2 == "Second_Unlock") {
                     img_motor2.setImageResource(unLockImg)
+
                 } else {
                     img_motor2.setImageResource(lockImg)
                 }
                 if (image_lock3 == "Third_Unlock") {
                     img_motor3.setImageResource(unLockImg)
+
                 } else {
                     img_motor3.setImageResource(lockImg)
                 }
@@ -67,19 +74,27 @@ class Amenity_Page2 : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val start = snapshot.value
 
-                if (start == "Fail") {
+                if (start == "Home_Fail") {
                     Log.d("확인", "Value is: $start")
 
-                    Toast.makeText(this@Amenity_Page2, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
-                }else if (start == "Success") {
-                    val intent = Intent(this@Amenity_Page2,AmenityMain::class.java)
+                    Toast.makeText(this@AmenityPage2, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+
+                }else if (start == "Home_Success") {
+
+
+                    val intent = Intent(this@AmenityPage2,AmenityMain::class.java)
                     startActivity(intent)
-                    Toast.makeText(this@Amenity_Page2, "출발합니다.", Toast.LENGTH_SHORT).show()}
+                    Toast.makeText(this@AmenityPage2, "출발합니다.", Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
         })
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 }

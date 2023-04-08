@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -23,152 +25,89 @@ import java.util.*
 
 
 class AmenityPage1 : AppCompatActivity() {
+    private lateinit var textHome: TextView
 
     private val database = Firebase.database
     val NFC = database.reference.child("NFC")
     val Motor = database.reference.child("Hotel_Motor")
     val Start = database.reference.child("Start")
     val Hotel = database.reference.child("Hotel")
-    val unLockImg = R.drawable.img_lock7
-    val lockImg = R.drawable.img_lock2
+    val imgLock7 = R.drawable.img_lock7
+    val imgLock2 = R.drawable.img_lock2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_page1)
 
+        val buttonIds = listOf(
+            R.id.imageButton0,
+            R.id.imageButton1,
+            R.id.imageButton2,
+            R.id.imageButton3,
+            R.id.imageButton4,
+            R.id.imageButton5,
+            R.id.imageButton6,
+            R.id.imageButton7,
+            R.id.imageButton8,
+            R.id.imageButton9,
+            R.id.imageButtonBack,
+            R.id.imageButtonStart,
+            R.id.imageButtonEnter
 
-        val imageButton1 = findViewById<ImageButton>(R.id.imageButton1)
-        val imageButton2 = findViewById<ImageButton>(R.id.imageButton2)
-        val imageButton3 = findViewById<ImageButton>(R.id.imageButton3)
-        val imageButton4 = findViewById<ImageButton>(R.id.imageButton4)
-        val imageButton5 = findViewById<ImageButton>(R.id.imageButton5)
-        val imageButton6 = findViewById<ImageButton>(R.id.imageButton6)
-        val imageButton7 = findViewById<ImageButton>(R.id.imageButton7)
-        val imageButton8 = findViewById<ImageButton>(R.id.imageButton8)
-        val imageButton9 = findViewById<ImageButton>(R.id.imageButton9)
-        val imageButton10 = findViewById<ImageButton>(R.id.imageButton0)
-        val imageButtonBack = findViewById<ImageButton>(R.id.imageButtonBack)
-        val imageButtonEnter = findViewById<ImageButton>(R.id.imageButtonEnter)
-        val imageButtonStart = findViewById<ImageButton>(R.id.imageButtonStart)
+        )
+        val lockImgIds = listOf(
 
-        val lock1Img = findViewById<ImageView>(R.id.lock1)
-        val lock2Img = findViewById<ImageView>(R.id.lock2)
-        val lock3Img = findViewById<ImageView>(R.id.lock3)
+            R.id.lock1,
+            R.id.lock2,
+            R.id.lock3
+        )
+        val button = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "del")
 
 
-        val text_home = findViewById<TextView>(R.id.text_home)
+        val imageButtons = Array(buttonIds.size) { i -> findViewById<ImageButton>(buttonIds[i]) }
+        val lockImg = Array(lockImgIds.size) { o -> findViewById<ImageView>(lockImgIds[o]) }
 
+        textHome = findViewById(R.id.text_home)
 
         //버튼 클릭 함수
         fun buttonClick(num: String) {
-            val txHome: String = text_home.text.toString()
-            val setNum = txHome + num
-
-            text_home.setTextColor(ContextCompat.getColor(this, R.color.purple_CACAE1))
-            if (num == "del") {
-                if (text_home.text.isNotEmpty()) {
-                    text_home.text = text_home.text.substring(0, text_home.text.length - 1)
+            with(textHome) {
+                setTextColor(ContextCompat.getColor(this@AmenityPage1, R.color.purple_CACAE1))
+                if (num == "del") {
+                    if (text.isNotEmpty()) text = text.substring(0, text.length - 1)
                 } else {
-                    text_home.text = ""
-                }
-            } else {
-                if (setNum.length <= 3) {
-                    text_home.text = setNum
-
+                    val setNum = text.toString() + num
+                    if (setNum.length <= 3) text = setNum
                 }
             }
-
-
         }
 
-        //버튼 클릭
-        imageButton1.setOnClickListener { buttonClick("1") }
-        imageButton2.setOnClickListener { buttonClick("2") }
-        imageButton3.setOnClickListener { buttonClick("3") }
-        imageButton4.setOnClickListener { buttonClick("4") }
-        imageButton5.setOnClickListener { buttonClick("5") }
-        imageButton6.setOnClickListener { buttonClick("6") }
-        imageButton7.setOnClickListener { buttonClick("7") }
-        imageButton8.setOnClickListener { buttonClick("8") }
-        imageButton9.setOnClickListener { buttonClick("9") }
-        imageButton10.setOnClickListener { buttonClick("0") }
-        imageButtonBack.setOnClickListener { buttonClick("del") }
+        //숫자 버튼 클릭
+        for (i in button.indices) {
+            imageButtons[i].setOnClickListener { buttonClick(button[i]) }
+        }
+
 
         //로봇 이동
-        imageButtonStart.setOnClickListener {
+        imageButtons[11].setOnClickListener {
 
             Start.setValue("Question")
 
-            if (text_home.text.length < 3) {
+            val length = textHome.text.length
+            when {
+                length < 3 -> {
+                    makeText(this@AmenityPage1, "호실을 지정해주시기 바랍니다.", Toast.LENGTH_SHORT).show()
+                    Start.setValue("Null")
+                }
+                length == 3 -> {
+                    Start.addValueEventListener(questionListener())
 
-                makeText(this@AmenityPage1, "지정된 호실이 없습니다.", Toast.LENGTH_SHORT).show()
-
-                Start.setValue("Null")
-
-            } else if (text_home.text.length == 3) {
-
-                Start.addValueEventListener(object : ValueEventListener {
-
-                    override fun onDataChange(snapshot: DataSnapshot) {
-
-                        val startValue = snapshot.value
-
-                        val lock1 = Motor.child("Hotel_Motor1")
-                        val lock2 = Motor.child("Hotel_Motor2")
-                        val lock3 = Motor.child("Hotel_Motor3")
-
-                        Log.d("확인", "Value is: $startValue")
-
-                        if (startValue == "Fail") {
-
-                            makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
-
-                        } else if (startValue == "Success") {
-                            makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
-
-                            Motor.addValueEventListener(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    val Hotel_Motor1 = snapshot.child("Hotel_Motor1").value.toString()
-                                    val Hotel_Motor2 = snapshot.child("Hotel_Motor2").value.toString()
-                                    val Hotel_Motor3 = snapshot.child("Hotel_Motor3").value.toString()
-                                    if (Hotel_Motor1 == "First_Unlock") {
-                                        Hotel.child("Lock1").setValue("First_Unlock")
-                                    }
-                                    if (Hotel_Motor2 == "Second_Unlock") {
-                                        Hotel.child("Lock2").setValue("Second_Unlock")
-                                    }
-                                    if (Hotel_Motor3 == "Third_Unlock") {
-                                        Hotel.child("Lock3").setValue("Third_Unlock")
-                                    }
-                                    lock1.setValue("First_Lock")
-                                    lock2.setValue("Second_Lock")
-                                    lock3.setValue("Third_Lock")
-                                    Hotel.child("go").setValue(text_home.text)
-
-                                    val intentAmenityPage3 = Intent(this@AmenityPage1, Amenity_Page3::class.java)
-                                    startActivity(intentAmenityPage3)
-                                }
-
-                                override fun onCancelled(error: DatabaseError) {
-
-                                }
-
-                            })
-                        }
-
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-
-                })
+                }
             }
         }
 
         //잠금장치 클릭시
-        imageButtonEnter.setOnClickListener {
+        imageButtons[12].setOnClickListener {
             val bottomSheet = BottomSheetFragment()
             bottomSheet.show(supportFragmentManager, BottomSheetFragment.TAG)
         }
@@ -176,27 +115,26 @@ class AmenityPage1 : AppCompatActivity() {
         //NFC
         NFC.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val nfcValue = snapshot.value as? String
 
-                val value = snapshot.value
-
-                if (value == "None") {
-                    val Main = Intent(this@AmenityPage1, MainLoading::class.java)
-                    Main.putExtra("key1", "0")
-                    startActivity(Main)
+                Log.d("파이어", "Value is: $nfcValue")
+                when (nfcValue) {
+                    "None" -> {
+                        val main = Intent(this@AmenityPage1, MainLoading::class.java)
+                        main.putExtra("key1", "0")
+                        startActivity(main)
+                    }
+                    "Serving" -> {
+                        val intentServing = Intent(this@AmenityPage1, MainLoading::class.java)
+                        intentServing.putExtra("key1", "2")
+                        startActivity(intentServing)
+                    }
                 }
-                Log.d("파이어", "Value is: $value")
-                if (value == "Serving") {
-                    val Intent_Serving = Intent(this@AmenityPage1, MainLoading::class.java)
-                    Intent_Serving.putExtra("key1", "2")
-                    startActivity(Intent_Serving)
-                }
-                Log.d("파이어", "Value is: $value")
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.w("파이어", "Failed to read value.", error.toException())
             }
-
         })
 
         //잠금장치 이미지 넣기 위한
@@ -204,24 +142,21 @@ class AmenityPage1 : AppCompatActivity() {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val imageLock1 = snapshot.child("Hotel_Motor1").value
-                val imageLock2 = snapshot.child("Hotel_Motor2").value
-                val imageLock3 = snapshot.child("Hotel_Motor3").value
+                val locks = arrayOf(
+                    snapshot.child("Hotel_Motor1").value as String?,
+                    snapshot.child("Hotel_Motor2").value as String?,
+                    snapshot.child("Hotel_Motor3").value as String?
+                )
 
-                if (imageLock1 == "First_Lock") {
-                    lock1Img.setImageResource(lockImg)
-                } else {
-                    lock1Img.setImageResource(unLockImg)
-                }
-                if (imageLock2 == "Second_Lock") {
-                    lock2Img.setImageResource(lockImg)
-                } else {
-                    lock2Img.setImageResource(unLockImg)
-                }
-                if (imageLock3 == "Third_Lock") {
-                    lock3Img.setImageResource(lockImg)
-                } else {
-                    lock3Img.setImageResource(unLockImg)
+                val lockImages = arrayOf(imgLock2, imgLock7)
+
+                locks.forEachIndexed { index, lock ->
+                    val imageResource = if (lock == "First_Lock" || lock == "Second_Lock" || lock == "Third_Lock") {
+                        lockImages[0]
+                    } else {
+                        lockImages[1]
+                    }
+                    lockImg[index].setImageResource(imageResource)
                 }
             }
 
@@ -232,82 +167,116 @@ class AmenityPage1 : AppCompatActivity() {
         })
 
         //Thread 이용하여 매초마다 업데이트 되는 방식
-        val t: Thread = object : Thread() {
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = object : Runnable {
             override fun run() {
-                try {
-                    while (!isInterrupted) {
-                        sleep(10)
-                        runOnUiThread { updateYOURthing() }
-                    }
-                } catch (e: InterruptedException) {
-                }
+                updateUI()
+                handler.postDelayed(this, 10)
             }
         }
-        t.start()
+        handler.post(runnable)
     }
 
     //배터리 & 시간
-    private fun updateYOURthing() {
+    private fun updateUI() {
+        // Set the time
+        val textTime = findViewById<TextView>(R.id.text_time)
+        val now = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("a hh:mm:ss", Locale.getDefault())
+        val getTime = dateFormat.format(now)
+        textTime.text = getTime
 
-        //시간
-        val text_time = findViewById<TextView>(R.id.text_time)
-        val now: Long = System.currentTimeMillis()
-        val date = Date(now)
-        val dateFormat = SimpleDateFormat("a hh:mm:ss")
-        val getTime: String = dateFormat.format(date)
-        text_time.text = getTime
+        // Set the battery level
+        val textBattery: TextView = findViewById<TextView>(R.id.text_battery)
+        val batteryPct = getBatteryLevel()
+        textBattery.text = "${batteryPct}%"
+        someFunction(batteryPct.toString())
+    }
 
-        //배터리 용량
-        val text_battery = findViewById<TextView>(R.id.text_battery)
-
-        var returnData = ""
-        try {
+    private fun getBatteryLevel(): Int {
+        return try {
             val batteryFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
             val batteryStatus = registerReceiver(null, batteryFilter)
-
-            val level = batteryStatus!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-            val scale = batteryStatus!!.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-
-            val batteryPct = level / scale.toFloat()
-            returnData = (batteryPct * 100).toInt().toString()
+            val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            (level / scale.toFloat() * 100).toInt()
         } catch (e: Exception) {
-            e.printStackTrace();
+            e.printStackTrace()
+            -1
         }
-//        Log.d("---", "---");
-//        Log.w("//===========//", "================================================");
-//        Log.d("ㅇ", "\n" + "[A_Battery > getBatteryRemainder() 메소드 : 현재 남은 배터리 잔량 확인 수행 실시]");
-//        Log.d("ㅇ", "\n[배터리 잔량 : $returnData]");
-//        Log.w("//===========//", "================================================");
-//        Log.d("---", "---");
-        text_battery.text = "$returnData%"
-        someFunction(returnData)
-
-
-
-        return
-
-
     }
 
     //
     fun someFunction(returnData: String) {
         val Image_battery = findViewById<ImageFilterView>(R.id.Image_battery)
-        // returnData 값이 변경될 때마다 호출되는 코드 블록
-        if (returnData.toInt() == 100) {
-            // 이미지를 변경하는 코드
-            Image_battery.setImageResource(R.drawable.battery_full)
-        }
-        if ( returnData.toInt() > 70) {
-            Image_battery.setImageResource(R.drawable.battery_threequarter)
-        } else if (returnData.toInt() >= 50) {
-            Image_battery.setImageResource(R.drawable.battery_half)
-        } else if (returnData.toInt() >= 30) {
-            Image_battery.setImageResource(R.drawable.battery_low)
-        } else{
-            Image_battery.setImageResource(R.drawable.battery_low)
+        when {
+            returnData.toInt() == 100 -> Image_battery.setImageResource(R.drawable.battery_full)
+            returnData.toInt() >= 70 -> Image_battery.setImageResource(R.drawable.battery_threequarter)
+            returnData.toInt() >= 50 -> Image_battery.setImageResource(R.drawable.battery_half)
+            returnData.toInt() >= 30 -> Image_battery.setImageResource(R.drawable.battery_low)
+            else -> Image_battery.setImageResource(R.drawable.battery_low)
         }
     }
 
+    private fun questionListener(): ValueEventListener {
+        return object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val startValue = snapshot.value
+                val lock1 = Motor.child("Hotel_Motor1")
+                val lock2 = Motor.child("Hotel_Motor2")
+                val lock3 = Motor.child("Hotel_Motor3")
+
+                Log.d("startValue", "Value is: $startValue")
+                if (startValue == "Fail") {
+                    makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+                } else if (startValue == "Success") {
+                    makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
+
+                    Motor.addValueEventListener(motorListener())
+
+                    lock1.setValue("First_Lock")
+                    lock2.setValue("Second_Lock")
+                    lock3.setValue("Third_Lock")
+                    Hotel.child("go").setValue(textHome.text)
+                    val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
+                    startActivity(intentAmenityPage3)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Do nothing
+            }
+        }
+    }
+
+    private fun motorListener(): ValueEventListener {
+        return object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val Hotel_Motor1 = snapshot.child("Hotel_Motor1").value.toString()
+                val Hotel_Motor2 = snapshot.child("Hotel_Motor2").value.toString()
+                val Hotel_Motor3 = snapshot.child("Hotel_Motor3").value.toString()
+
+                if (Hotel_Motor1 == "First_Unlock") {
+                    Hotel.child("Lock1").setValue("First_Unlock")
+                }
+                if (Hotel_Motor2 == "Second_Unlock") {
+                    Hotel.child("Lock2").setValue("Second_Unlock")
+                }
+                if (Hotel_Motor3 == "Third_Unlock") {
+                    Hotel.child("Lock3").setValue("Third_Unlock")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Do nothing
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
 
 }
 
