@@ -245,7 +245,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageButton7" />
 
     <ImageButton
-        android:id="@+id/imageButtonEnter"
+        android:id="@+id/imageButtonLock"
         android:layout_width="150dp"
         android:layout_height="75dp"
         android:layout_marginStart="15dp"

@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/btn_lock1"
+        android:id="@+id/btn_motor1"
         android:layout_width="221dp"
         android:layout_height="92dp"
         android:scaleType="centerCrop"
@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0.289" />
 
     <ImageButton
-        android:id="@+id/btn_lock2"
+        android:id="@+id/btn_motor2"
         android:layout_width="221dp"
         android:layout_height="92dp"
         android:layout_marginTop="17dp"
@@ -41,10 +41,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_lock1" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_motor1" />
 
     <ImageButton
-        android:id="@+id/btn_lock3"
+        android:id="@+id/btn_motor3"
         android:layout_width="221dp"
         android:layout_height="92dp"
         android:layout_marginTop="17dp"
@@ -53,7 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_lock2" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_motor2" />
 
     <ImageButton
         android:id="@+id/button"

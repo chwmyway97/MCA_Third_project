@@ -52,20 +52,17 @@ class AmenityPage1 : AppCompatActivity() {
             R.id.imageButton9,
             R.id.imageButtonBack,
             R.id.imageButtonStart,
-            R.id.imageButtonEnter
+            R.id.imageButtonLock
 
         )
-        val lockImgIds = listOf(
-
-            R.id.lock1,
-            R.id.lock2,
-            R.id.lock3
-        )
-        val button = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "del")
-
-
         val imageButtons = Array(buttonIds.size) { i -> findViewById<ImageButton>(buttonIds[i]) }
+
+        val lockImgIds = listOf(R.id.lock1, R.id.lock2, R.id.lock3)
         val lockImg = Array(lockImgIds.size) { o -> findViewById<ImageView>(lockImgIds[o]) }
+
+
+
+
 
         textHome = findViewById(R.id.text_home)
 
@@ -82,13 +79,14 @@ class AmenityPage1 : AppCompatActivity() {
             }
         }
 
-        //숫자 버튼 클릭
+        val button = listOf("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "del")
+
         for (i in button.indices) {
             imageButtons[i].setOnClickListener { buttonClick(button[i]) }
         }
 
 
-        //로봇 이동
+        //로봇 이동 start버튼
         imageButtons[11].setOnClickListener {
 
             Start.setValue("Question")
@@ -177,7 +175,7 @@ class AmenityPage1 : AppCompatActivity() {
         handler.post(runnable)
     }
 
-    //배터리 & 시간
+    //배터리&시간
     private fun updateUI() {
         // Set the time
         val textTime = findViewById<TextView>(R.id.text_time)
@@ -252,17 +250,17 @@ class AmenityPage1 : AppCompatActivity() {
     private fun motorListener(): ValueEventListener {
         return object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val Hotel_Motor1 = snapshot.child("Hotel_Motor1").value.toString()
-                val Hotel_Motor2 = snapshot.child("Hotel_Motor2").value.toString()
-                val Hotel_Motor3 = snapshot.child("Hotel_Motor3").value.toString()
+                val hotelMotor1 = snapshot.child("Hotel_Motor1").value.toString()
+                val hotelMotor2 = snapshot.child("Hotel_Motor2").value.toString()
+                val hotelMotor3 = snapshot.child("Hotel_Motor3").value.toString()
 
-                if (Hotel_Motor1 == "First_Unlock") {
+                if (hotelMotor1 == "First_Unlock") {
                     Hotel.child("Lock1").setValue("First_Unlock")
                 }
-                if (Hotel_Motor2 == "Second_Unlock") {
+                if (hotelMotor2 == "Second_Unlock") {
                     Hotel.child("Lock2").setValue("Second_Unlock")
                 }
-                if (Hotel_Motor3 == "Third_Unlock") {
+                if (hotelMotor3 == "Third_Unlock") {
                     Hotel.child("Lock3").setValue("Third_Unlock")
                 }
             }
