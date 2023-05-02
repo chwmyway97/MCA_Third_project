@@ -248,7 +248,7 @@ class AmenityPage1 : AppCompatActivity() {
         // Set the battery level
         val textBattery: TextView = findViewById<TextView>(R.id.text_battery)
         val batteryPct = getBatteryLevel()
-        textBattery.text = "${batteryPct}%"
+        textBattery.text = "${ batteryPct}%"
         someFunction(batteryPct.toString())
     }
 
