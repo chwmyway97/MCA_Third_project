@@ -39,6 +39,9 @@ class AmenityPage1 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_page1)
 
+        Hotel.removeValue()
+
+
         val buttonIds = listOf(
             R.id.imageButton0,
             R.id.imageButton1,
@@ -187,7 +190,7 @@ class AmenityPage1 : AppCompatActivity() {
         // Set the battery level
         val textBattery: TextView = findViewById<TextView>(R.id.text_battery)
         val batteryPct = getBatteryLevel()
-        textBattery.text = "${batteryPct}%"
+        textBattery.text = "${ batteryPct}%"
         someFunction(batteryPct.toString())
     }
 
