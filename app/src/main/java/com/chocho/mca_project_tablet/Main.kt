@@ -46,12 +46,14 @@ class Main : AppCompatActivity() {
                     "Hotel" -> {
                         intentLoding.putExtra("key1", "1")
                         startActivity(intentLoding)
+                        finish()
                     }
 
                     // 로딩_서빙(2)
                     "Serving" -> {
                         intentLoding.putExtra("key1", "2")
                         startActivity(intentLoding)
+                        finish()
                     }
 
                 }

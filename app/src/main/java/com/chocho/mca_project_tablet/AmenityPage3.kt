@@ -17,6 +17,8 @@ class AmenityPage3 : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
     val go = database.reference.child("Hotel").child("go")
     val QR = database.reference.child("QR")
+    private lateinit var goListener: ValueEventListener
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +56,7 @@ class AmenityPage3 : AppCompatActivity() {
 
                 val scannedData = result.contents // 스캔한 QR 코드의 결과 값
 
-                go.addValueEventListener(object : ValueEventListener {
+                goListener = object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val Hotel = snapshot.value
 
@@ -64,13 +66,13 @@ class AmenityPage3 : AppCompatActivity() {
                             Toast.makeText(this@AmenityPage3,"확인됨",Toast.LENGTH_LONG).show()
                             val intent =Intent(this@AmenityPage3,AmenityPage2::class.java)
                             startActivity(intent)
+                            finish()
 
 
                         }else{
                             Toast.makeText(this@AmenityPage3,"실패",Toast.LENGTH_LONG).show()
                             // 실패한 경우 QR 코드 리더기 다시 시작
-                            QR.removeValue()
-                            QR.setValue("QR")
+
                         }
                     }
 
@@ -78,7 +80,8 @@ class AmenityPage3 : AppCompatActivity() {
                         TODO("Not yet implemented")
                     }
 
-                })
+                }
+                go.addValueEventListener(goListener)
 
             } else {
                 Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show()
@@ -90,9 +93,9 @@ class AmenityPage3 : AppCompatActivity() {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
-    override fun onDestroy() {
-        super.onDestroy()
 
+    override fun onStop() {
+        super.onStop()
     }
 
 }

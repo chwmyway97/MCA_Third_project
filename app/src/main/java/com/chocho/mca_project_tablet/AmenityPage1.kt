@@ -15,6 +15,9 @@ import android.widget.Toast.makeText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
+import androidx.core.content.ContextCompat.startActivity
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -26,6 +29,7 @@ import java.util.*
 
 class AmenityPage1 : AppCompatActivity() {
     private lateinit var textHome: TextView
+    private lateinit var startListener: ValueEventListener
 
     private val database = Firebase.database
     val NFC = database.reference.child("NFC")
@@ -38,6 +42,9 @@ class AmenityPage1 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_page1)
+
+        Hotel.removeValue()
+
 
         val buttonIds = listOf(
             R.id.imageButton0,
@@ -98,7 +105,59 @@ class AmenityPage1 : AppCompatActivity() {
                     Start.setValue("Null")
                 }
                 length == 3 -> {
-                    Start.addValueEventListener(questionListener())
+                    startListener = object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val startValue = snapshot.value
+                            val lock1 = Motor.child("Hotel_Motor1")
+                            val lock2 = Motor.child("Hotel_Motor2")
+                            val lock3 = Motor.child("Hotel_Motor3")
+
+                            Log.d("startValue", "Value is: $startValue")
+                            if (startValue == "Fail") {
+                                makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+                            } else if (startValue == "Success") {
+                                makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
+
+                                Motor.addValueEventListener(object : ValueEventListener {
+                                    override fun onDataChange(snapshot: DataSnapshot) {
+                                        val hotelMotor1 = snapshot.child("Hotel_Motor1").value.toString()
+                                        val hotelMotor2 = snapshot.child("Hotel_Motor2").value.toString()
+                                        val hotelMotor3 = snapshot.child("Hotel_Motor3").value.toString()
+
+                                        if (hotelMotor1 == "First_Unlock") {
+                                            Hotel.child("Lock1").setValue("First_Unlock")
+                                        }
+                                        if (hotelMotor2 == "Second_Unlock") {
+                                            Hotel.child("Lock2").setValue("Second_Unlock")
+                                        }
+                                        if (hotelMotor3 == "Third_Unlock") {
+                                            Hotel.child("Lock3").setValue("Third_Unlock")
+                                        }
+
+                                    }
+
+                                    override fun onCancelled(error: DatabaseError) {
+                                        TODO("Not yet implemented")
+                                    }
+                                })
+
+                                lock1.setValue("First_Lock")
+                                lock2.setValue("Second_Lock")
+                                lock3.setValue("Third_Lock")
+                                Hotel.child("go").setValue(textHome.text)
+                                val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
+                                startActivity(intentAmenityPage3)
+                                finish()
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+
+                    }
+                    Start.addValueEventListener(startListener)
 
                 }
             }
@@ -121,11 +180,13 @@ class AmenityPage1 : AppCompatActivity() {
                         val main = Intent(this@AmenityPage1, MainLoading::class.java)
                         main.putExtra("key1", "0")
                         startActivity(main)
+                        finish()
                     }
                     "Serving" -> {
                         val intentServing = Intent(this@AmenityPage1, MainLoading::class.java)
                         intentServing.putExtra("key1", "2")
                         startActivity(intentServing)
+                        finish()
                     }
                 }
             }
@@ -216,66 +277,64 @@ class AmenityPage1 : AppCompatActivity() {
         }
     }
 
-    private fun questionListener(): ValueEventListener {
-        return object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val startValue = snapshot.value
-                val lock1 = Motor.child("Hotel_Motor1")
-                val lock2 = Motor.child("Hotel_Motor2")
-                val lock3 = Motor.child("Hotel_Motor3")
+//    private fun questionListener(): ValueEventListener {
+//        return object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val startValue = snapshot.value
+//                val lock1 = Motor.child("Hotel_Motor1")
+//                val lock2 = Motor.child("Hotel_Motor2")
+//                val lock3 = Motor.child("Hotel_Motor3")
+//
+//                Log.d("startValue", "Value is: $startValue")
+//                if (startValue == "Fail") {
+//                    makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+//                } else if (startValue == "Success") {
+//                    makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
+//
+//                    Motor.addValueEventListener(motorListener())
+//
+//                    lock1.setValue("First_Lock")
+//                    lock2.setValue("Second_Lock")
+//                    lock3.setValue("Third_Lock")
+//                    Hotel.child("go").setValue(textHome.text)
+//                    val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
+//                    startActivity(intentAmenityPage3)
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                // Do nothing
+//            }
+//        }
+//    }
 
-                Log.d("startValue", "Value is: $startValue")
-                if (startValue == "Fail") {
-                    makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
-                } else if (startValue == "Success") {
-                    makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
-
-                    Motor.addValueEventListener(motorListener())
-
-                    lock1.setValue("First_Lock")
-                    lock2.setValue("Second_Lock")
-                    lock3.setValue("Third_Lock")
-                    Hotel.child("go").setValue(textHome.text)
-                    val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
-                    startActivity(intentAmenityPage3)
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Do nothing
-            }
-        }
+    //    private fun motorListener(): ValueEventListener {
+//        return object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val hotelMotor1 = snapshot.child("Hotel_Motor1").value.toString()
+//                val hotelMotor2 = snapshot.child("Hotel_Motor2").value.toString()
+//                val hotelMotor3 = snapshot.child("Hotel_Motor3").value.toString()
+//
+//                if (hotelMotor1 == "First_Unlock") {
+//                    Hotel.child("Lock1").setValue("First_Unlock")
+//                }
+//                if (hotelMotor2 == "Second_Unlock") {
+//                    Hotel.child("Lock2").setValue("Second_Unlock")
+//                }
+//                if (hotelMotor3 == "Third_Unlock") {
+//                    Hotel.child("Lock3").setValue("Third_Unlock")
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                // Do nothing
+//            }
+//        }
+//    }
+    override fun onStop() {
+        super.onStop()
+        Start.removeEventListener(startListener)
     }
-
-    private fun motorListener(): ValueEventListener {
-        return object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val hotelMotor1 = snapshot.child("Hotel_Motor1").value.toString()
-                val hotelMotor2 = snapshot.child("Hotel_Motor2").value.toString()
-                val hotelMotor3 = snapshot.child("Hotel_Motor3").value.toString()
-
-                if (hotelMotor1 == "First_Unlock") {
-                    Hotel.child("Lock1").setValue("First_Unlock")
-                }
-                if (hotelMotor2 == "Second_Unlock") {
-                    Hotel.child("Lock2").setValue("Second_Unlock")
-                }
-                if (hotelMotor3 == "Third_Unlock") {
-                    Hotel.child("Lock3").setValue("Third_Unlock")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Do nothing
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-    }
-
 }
 
 

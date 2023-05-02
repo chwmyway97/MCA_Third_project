@@ -27,6 +27,7 @@ class AmenityMain : AppCompatActivity() {
         robot.setOnClickListener {
             val netPageIntent = Intent(this, AmenityPage1::class.java)
             startActivity(netPageIntent)
+            finish()
         }
 
 
@@ -41,12 +42,14 @@ class AmenityMain : AppCompatActivity() {
                     val Main = Intent(this@AmenityMain,MainLoading::class.java)
                     Main.putExtra("key1","0")
                     startActivity(Main)
+                    finish()
                 }
                 Log.d("파이어", "Value is: $value")
                 if (value == "Serving"){
                     val Intent_Serving = Intent(this@AmenityMain,MainLoading::class.java)
                     Intent_Serving.putExtra("key1","2")
                     startActivity(Intent_Serving)
+                    finish()
                 }
                 Log.d("파이어", "Value is: $value")
             }

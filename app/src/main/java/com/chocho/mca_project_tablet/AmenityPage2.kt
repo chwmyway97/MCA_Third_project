@@ -12,12 +12,15 @@ import com.google.firebase.ktx.Firebase
 
 class AmenityPage2 : AppCompatActivity() {
 
+    private lateinit var startListener: ValueEventListener
+
+
     private val database = Firebase.database
     val unLockImg = R.drawable.img_lock7
     val lockImg = R.drawable.img_lock2
     val Hotel = database.reference.child("Hotel")
     val Start = database.reference.child("Start")
-
+    val QR = database.reference.child("QR")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +73,7 @@ class AmenityPage2 : AppCompatActivity() {
             }
 
         })
-        Start.addValueEventListener(object : ValueEventListener {
+        startListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val start = snapshot.value
 
@@ -80,21 +83,25 @@ class AmenityPage2 : AppCompatActivity() {
                     Toast.makeText(this@AmenityPage2, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
 
                 }else if (start == "Home_Success") {
-
+                    QR.removeValue()
 
                     val intent = Intent(this@AmenityPage2,AmenityMain::class.java)
                     startActivity(intent)
+
                     Toast.makeText(this@AmenityPage2, "출발합니다.", Toast.LENGTH_SHORT).show()
+
+                    finish()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-        })
+        }
+        Start.addValueEventListener(startListener)
     }
-    override fun onDestroy() {
-        super.onDestroy()
-
+    override fun onStop() {
+        super.onStop()
+        Start.removeEventListener(startListener)
     }
 }

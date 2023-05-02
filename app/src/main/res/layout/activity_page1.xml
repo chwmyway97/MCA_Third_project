@@ -21,30 +21,69 @@
         android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1090dp"
-        android:layout_marginTop="6dp"
-        android:orientation="horizontal"
+        android:layout_marginStart="1140dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/text_battery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@string/text_100"
-            android:textColor="@color/purple_CACAE1"
-            android:textSize="30sp" />
-
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/Image_battery"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+
             />
+
+        <TextView
+            android:id="@+id/text_battery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/text_100"
+            android:textColor="@color/purple_CACAE1"
+            android:textSize="15sp"
+            android:layout_marginLeft="3dp"/>
+
+
+
 
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/cogwheel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@drawable/chain2"
+
+            />
+
+        <TextView
+            android:id="@+id/cogwheel_tx"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="연결"
+            android:textColor="@color/purple_CACAE1"
+            android:textSize="15sp" />
+
+    </LinearLayout>
 
 
     <TextView

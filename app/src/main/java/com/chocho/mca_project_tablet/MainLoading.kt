@@ -61,10 +61,13 @@ class MainLoading : AppCompatActivity() {
             progressBar.isVisible = false
 
             when (mainIntentKey) {
+
                 "0" -> startActivity(main)
                 "1" -> startActivity(intentAmenity)
                 "2" -> startActivity(intentServing)
+
             }
+            finish()
         }, delayMillis)
 
 
