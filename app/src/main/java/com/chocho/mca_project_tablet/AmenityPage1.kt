@@ -30,6 +30,7 @@ import java.util.*
 class AmenityPage1 : AppCompatActivity() {
     private lateinit var textHome: TextView
     private lateinit var startListener: ValueEventListener
+    private lateinit var motorListener: ValueEventListener
 
     private val database = Firebase.database
     val NFC = database.reference.child("NFC")
@@ -118,7 +119,7 @@ class AmenityPage1 : AppCompatActivity() {
                             } else if (startValue == "Success") {
                                 makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
 
-                                Motor.addValueEventListener(object : ValueEventListener {
+                                motorListener = object : ValueEventListener {
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         val hotelMotor1 = snapshot.child("Hotel_Motor1").value.toString()
                                         val hotelMotor2 = snapshot.child("Hotel_Motor2").value.toString()
@@ -139,13 +140,16 @@ class AmenityPage1 : AppCompatActivity() {
                                     override fun onCancelled(error: DatabaseError) {
                                         TODO("Not yet implemented")
                                     }
-                                })
+                                }
+                                Motor.addValueEventListener(motorListener)
 
                                 lock1.setValue("First_Lock")
                                 lock2.setValue("Second_Lock")
                                 lock3.setValue("Third_Lock")
                                 Hotel.child("go").setValue(textHome.text)
+
                                 val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
+                                intentAmenityPage3.putExtra("go", textHome.text)
                                 startActivity(intentAmenityPage3)
                                 finish()
                             }
@@ -169,35 +173,10 @@ class AmenityPage1 : AppCompatActivity() {
             bottomSheet.show(supportFragmentManager, BottomSheetFragment.TAG)
         }
 
-        //NFC
-        NFC.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val nfcValue = snapshot.value as? String
 
-                Log.d("파이어", "Value is: $nfcValue")
-                when (nfcValue) {
-                    "None" -> {
-                        val main = Intent(this@AmenityPage1, MainLoading::class.java)
-                        main.putExtra("key1", "0")
-                        startActivity(main)
-                        finish()
-                    }
-                    "Serving" -> {
-                        val intentServing = Intent(this@AmenityPage1, MainLoading::class.java)
-                        intentServing.putExtra("key1", "2")
-                        startActivity(intentServing)
-                        finish()
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.w("파이어", "Failed to read value.", error.toException())
-            }
-        })
 
         //잠금장치 이미지 넣기 위한
-        Motor.addValueEventListener(object : ValueEventListener {
+        motorListener = object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -223,7 +202,8 @@ class AmenityPage1 : AppCompatActivity() {
                 Log.w("파이어", "Failed to read value.", error.toException())
             }
 
-        })
+        }
+        Motor.addValueEventListener(motorListener)
 
         //Thread 이용하여 매초마다 업데이트 되는 방식
         val handler = Handler(Looper.getMainLooper())
@@ -248,10 +228,11 @@ class AmenityPage1 : AppCompatActivity() {
         // Set the battery level
         val textBattery: TextView = findViewById<TextView>(R.id.text_battery)
         val batteryPct = getBatteryLevel()
-        textBattery.text = "${ batteryPct}%"
+        textBattery.text = "${batteryPct}%"
         someFunction(batteryPct.toString())
     }
 
+    //배터리 계산
     private fun getBatteryLevel(): Int {
         return try {
             val batteryFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
@@ -277,63 +258,11 @@ class AmenityPage1 : AppCompatActivity() {
         }
     }
 
-//    private fun questionListener(): ValueEventListener {
-//        return object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val startValue = snapshot.value
-//                val lock1 = Motor.child("Hotel_Motor1")
-//                val lock2 = Motor.child("Hotel_Motor2")
-//                val lock3 = Motor.child("Hotel_Motor3")
-//
-//                Log.d("startValue", "Value is: $startValue")
-//                if (startValue == "Fail") {
-//                    makeText(this@AmenityPage1, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
-//                } else if (startValue == "Success") {
-//                    makeText(this@AmenityPage1, "출발 합니다.", Toast.LENGTH_SHORT).show()
-//
-//                    Motor.addValueEventListener(motorListener())
-//
-//                    lock1.setValue("First_Lock")
-//                    lock2.setValue("Second_Lock")
-//                    lock3.setValue("Third_Lock")
-//                    Hotel.child("go").setValue(textHome.text)
-//                    val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
-//                    startActivity(intentAmenityPage3)
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Do nothing
-//            }
-//        }
-//    }
 
-    //    private fun motorListener(): ValueEventListener {
-//        return object : ValueEventListener {
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                val hotelMotor1 = snapshot.child("Hotel_Motor1").value.toString()
-//                val hotelMotor2 = snapshot.child("Hotel_Motor2").value.toString()
-//                val hotelMotor3 = snapshot.child("Hotel_Motor3").value.toString()
-//
-//                if (hotelMotor1 == "First_Unlock") {
-//                    Hotel.child("Lock1").setValue("First_Unlock")
-//                }
-//                if (hotelMotor2 == "Second_Unlock") {
-//                    Hotel.child("Lock2").setValue("Second_Unlock")
-//                }
-//                if (hotelMotor3 == "Third_Unlock") {
-//                    Hotel.child("Lock3").setValue("Third_Unlock")
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Do nothing
-//            }
-//        }
-//    }
     override fun onStop() {
         super.onStop()
         Start.removeEventListener(startListener)
+        Motor.removeEventListener(motorListener)
     }
 }
 

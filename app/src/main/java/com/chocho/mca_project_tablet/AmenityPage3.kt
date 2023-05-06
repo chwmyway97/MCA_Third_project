@@ -17,7 +17,7 @@ class AmenityPage3 : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
     val go = database.reference.child("Hotel").child("go")
     val QR = database.reference.child("QR")
-    private lateinit var goListener: ValueEventListener
+    private lateinit var QRListener: ValueEventListener
 
 
 
@@ -26,7 +26,7 @@ class AmenityPage3 : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        QR.addValueEventListener(object : ValueEventListener {
+        QRListener = object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.value == "QR") {
@@ -45,7 +45,8 @@ class AmenityPage3 : AppCompatActivity() {
             override fun onCancelled(databaseError: DatabaseError) {
                 Log.d("MainActivity", "onCancelled: $databaseError")
             }
-        })
+        }
+        QR.addValueEventListener(QRListener)
 
     }
 
@@ -55,47 +56,33 @@ class AmenityPage3 : AppCompatActivity() {
             if (result.contents != null) {
 
                 val scannedData = result.contents // 스캔한 QR 코드의 결과 값
+                val qrIntentKey = intent.getStringExtra("go")
 
-                goListener = object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        val Hotel = snapshot.value
+                if (scannedData == qrIntentKey) {
 
-                        if (scannedData == Hotel.toString()){
+                    Log.d("호텔", scannedData)
+                    Toast.makeText(this@AmenityPage3, "확인됨", Toast.LENGTH_LONG).show()
+                    val intent = Intent(this@AmenityPage3, AmenityPage2::class.java)
+                    startActivity(intent)
+                    finish()
 
-                            Log.d("호텔",scannedData)
-                            Toast.makeText(this@AmenityPage3,"확인됨",Toast.LENGTH_LONG).show()
-                            val intent =Intent(this@AmenityPage3,AmenityPage2::class.java)
-                            startActivity(intent)
-                            finish()
-
-
-                        }else{
-                            Toast.makeText(this@AmenityPage3,"실패",Toast.LENGTH_LONG).show()
-                            // 실패한 경우 QR 코드 리더기 다시 시작
-
-                        }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
+                } else {
+                    Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show()
+                    // 실패한 경우 QR 코드 리더기 다시 시작
+                    QR.removeValue()
+                    QR.setValue("QR")
                 }
-                go.addValueEventListener(goListener)
-
             } else {
-                Toast.makeText(this, "Scan canceled", Toast.LENGTH_SHORT).show()
-                // 실패한 경우 QR 코드 리더기 다시 시작
-                QR.removeValue()
-                QR.setValue("QR")
+                super.onActivityResult(requestCode, resultCode, data)
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
+
     override fun onStop() {
         super.onStop()
+        QR.removeEventListener(QRListener)
+
     }
 
 }

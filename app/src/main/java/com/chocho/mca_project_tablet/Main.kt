@@ -42,6 +42,13 @@ class Main : AppCompatActivity() {
 
                 when (nfcValue) {
 
+                    //로딩_메인(0)
+                    "None" -> {
+                        intentLoding.putExtra("key1","0")
+                        startActivity(intentLoding)
+                        finish()
+                    }
+
                     // 로딩_호텔(1)
                     "Hotel" -> {
                         intentLoding.putExtra("key1", "1")
