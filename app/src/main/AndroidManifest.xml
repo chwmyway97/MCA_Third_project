@@ -35,9 +35,10 @@
         <activity android:name=".AmenityPage2" android:exported="true"  android:screenOrientation="landscape"/>
 
         <activity android:name=".ServingMain"  android:exported="true"  android:screenOrientation="landscape"/>
-        <activity android:name=".Serving_page1" android:exported="true"  android:screenOrientation="landscape"/>
+        <activity android:name=".ServingPage1" android:exported="true"  android:screenOrientation="landscape"/>
 
         <activity android:name=".MainLoading" android:exported="true"  android:screenOrientation="landscape"/>
+
 
 <!--        <activity android:name=".QR" android:exported="true"  android:screenOrientation="landscape"/>-->
 

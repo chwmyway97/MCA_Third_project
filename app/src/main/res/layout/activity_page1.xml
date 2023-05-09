@@ -64,17 +64,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/cogwheel"
+            android:id="@+id/chain"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:background="@drawable/chain2"
+
 
             />
 
         <TextView
-            android:id="@+id/cogwheel_tx"
+            android:id="@+id/chain_tx"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"

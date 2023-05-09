@@ -67,7 +67,7 @@ class MainLoading : AppCompatActivity() {
                 "2" -> startActivity(intentServing)
 
             }
-            finish()
+
         }, delayMillis)
 
 

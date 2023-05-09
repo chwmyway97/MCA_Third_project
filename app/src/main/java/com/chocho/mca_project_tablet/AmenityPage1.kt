@@ -15,9 +15,6 @@ import android.widget.Toast.makeText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.registerReceiver
-import androidx.core.content.ContextCompat.startActivity
-import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -31,20 +28,23 @@ class AmenityPage1 : AppCompatActivity() {
     private lateinit var textHome: TextView
     private lateinit var startListener: ValueEventListener
     private lateinit var motorListener: ValueEventListener
+    private lateinit var moduleListener: ValueEventListener
 
     private val database = Firebase.database
-    val NFC = database.reference.child("NFC")
-    val Motor = database.reference.child("Hotel_Motor")
-    val Start = database.reference.child("Start")
-    val Hotel = database.reference.child("Hotel")
-    val imgLock7 = R.drawable.img_lock7
-    val imgLock2 = R.drawable.img_lock2
+    private val nfc = database.reference.child("NFC")
+    private val motor = database.reference.child("Hotel_Motor")
+    private val move = database.reference.child("Start")
+    private val hotel = database.reference.child("Hotel")
+    private val module = database.reference.child("Module_Motor")
+
+    private val imgLock7 = R.drawable.img_lock7
+    private val imgLock2 = R.drawable.img_lock2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_page1)
 
-        Hotel.removeValue()
+        hotel.removeValue()
 
 
         val buttonIds = listOf(
@@ -68,9 +68,37 @@ class AmenityPage1 : AppCompatActivity() {
         val lockImgIds = listOf(R.id.lock1, R.id.lock2, R.id.lock3)
         val lockImg = Array(lockImgIds.size) { o -> findViewById<ImageView>(lockImgIds[o]) }
 
+        val moduleImg = findViewById<ImageFilterView>(R.id.chain)
+        val moduleTx = findViewById<TextView>(R.id.chain_tx)
 
 
+        moduleImg.setOnClickListener {
 
+            module.setValue("Open")
+
+        }
+
+        //모듈 잠금 해제 코드
+        moduleListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val moduleValue = snapshot.value
+                if (moduleValue == "Open"){
+                    moduleImg.setImageResource(R.drawable.chain_broken)
+                    moduleTx.text = "해제"
+                }
+                else{
+                    moduleImg.setImageResource(R.drawable.chain2)
+                    moduleTx.text = "연결"
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        }
+        module.addValueEventListener(moduleListener)
 
         textHome = findViewById(R.id.text_home)
 
@@ -97,21 +125,21 @@ class AmenityPage1 : AppCompatActivity() {
         //로봇 이동 start버튼
         imageButtons[11].setOnClickListener {
 
-            Start.setValue("Question")
+            move.setValue("Question")
 
             val length = textHome.text.length
             when {
                 length < 3 -> {
                     makeText(this@AmenityPage1, "호실을 지정해주시기 바랍니다.", Toast.LENGTH_SHORT).show()
-                    Start.setValue("Null")
+                    move.setValue("Null")
                 }
                 length == 3 -> {
                     startListener = object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             val startValue = snapshot.value
-                            val lock1 = Motor.child("Hotel_Motor1")
-                            val lock2 = Motor.child("Hotel_Motor2")
-                            val lock3 = Motor.child("Hotel_Motor3")
+                            val lock1 = motor.child("Hotel_Motor1")
+                            val lock2 = motor.child("Hotel_Motor2")
+                            val lock3 = motor.child("Hotel_Motor3")
 
                             Log.d("startValue", "Value is: $startValue")
                             if (startValue == "Fail") {
@@ -126,13 +154,13 @@ class AmenityPage1 : AppCompatActivity() {
                                         val hotelMotor3 = snapshot.child("Hotel_Motor3").value.toString()
 
                                         if (hotelMotor1 == "First_Unlock") {
-                                            Hotel.child("Lock1").setValue("First_Unlock")
+                                            hotel.child("Lock1").setValue("First_Unlock")
                                         }
                                         if (hotelMotor2 == "Second_Unlock") {
-                                            Hotel.child("Lock2").setValue("Second_Unlock")
+                                            hotel.child("Lock2").setValue("Second_Unlock")
                                         }
                                         if (hotelMotor3 == "Third_Unlock") {
-                                            Hotel.child("Lock3").setValue("Third_Unlock")
+                                            hotel.child("Lock3").setValue("Third_Unlock")
                                         }
 
                                     }
@@ -141,12 +169,12 @@ class AmenityPage1 : AppCompatActivity() {
                                         TODO("Not yet implemented")
                                     }
                                 }
-                                Motor.addValueEventListener(motorListener)
+                                motor.addValueEventListener(motorListener)
 
                                 lock1.setValue("First_Lock")
                                 lock2.setValue("Second_Lock")
                                 lock3.setValue("Third_Lock")
-                                Hotel.child("go").setValue(textHome.text)
+                                hotel.child("go").setValue(textHome.text)
 
                                 val intentAmenityPage3 = Intent(this@AmenityPage1, AmenityPage3::class.java)
                                 intentAmenityPage3.putExtra("go", textHome.text)
@@ -161,7 +189,7 @@ class AmenityPage1 : AppCompatActivity() {
 
 
                     }
-                    Start.addValueEventListener(startListener)
+                    move.addValueEventListener(startListener)
 
                 }
             }
@@ -203,7 +231,7 @@ class AmenityPage1 : AppCompatActivity() {
             }
 
         }
-        Motor.addValueEventListener(motorListener)
+        motor.addValueEventListener(motorListener)
 
         //Thread 이용하여 매초마다 업데이트 되는 방식
         val handler = Handler(Looper.getMainLooper())
@@ -261,8 +289,9 @@ class AmenityPage1 : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        Start.removeEventListener(startListener)
-        Motor.removeEventListener(motorListener)
+        move.removeEventListener(startListener)
+        motor.removeEventListener(motorListener)
+        module.removeEventListener(moduleListener)
     }
 }
 
