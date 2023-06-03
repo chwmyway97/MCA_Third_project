@@ -199,6 +199,7 @@ class AmenityPage1 : AppCompatActivity() {
         imageButtons[12].setOnClickListener {
             val bottomSheet = BottomSheetFragment()
             bottomSheet.show(supportFragmentManager, BottomSheetFragment.TAG)
+
         }
 
 

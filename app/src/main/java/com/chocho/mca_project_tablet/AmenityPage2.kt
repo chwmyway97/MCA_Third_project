@@ -1,12 +1,14 @@
 package com.chocho.mca_project_tablet
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
-import com.google.firebase.database.*
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -38,7 +40,7 @@ class AmenityPage2 : AppCompatActivity() {
 
 
         Start.setValue("Question1")
-        hotelListener= object : ValueEventListener {
+        hotelListener = object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -87,23 +89,24 @@ class AmenityPage2 : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val start = snapshot.value
 
-                if (start == "Home_Fail") {
-                    Log.d("확인", "Value is: $start")
-
-                    Toast.makeText(this@AmenityPage2, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
-
-                }else if (start == "Home_Success") {
+                if (start == "Home_Success") {
                     QR.removeValue()
                     Hotel.removeValue()
                     Motor1.setValue("First_Lock")
                     Motor2.setValue("Second_Lock")
                     Motor3.setValue("Third_Lock")
-                    val intent = Intent(this@AmenityPage2,AmenityMain::class.java)
+                    val intent = Intent(this@AmenityPage2, AmenityMain::class.java)
                     startActivity(intent)
 
                     Toast.makeText(this@AmenityPage2, "출발합니다.", Toast.LENGTH_SHORT).show()
 
                     finish()
+                }
+                else if (start == "Home_Fail") {
+                    Log.d("확인", "Value is: $start")
+
+                    Toast.makeText(this@AmenityPage2, "문을 닫아 주세요", Toast.LENGTH_SHORT).show()
+
                 }
             }
 
@@ -113,6 +116,7 @@ class AmenityPage2 : AppCompatActivity() {
         }
         Start.addValueEventListener(startListener)
     }
+
     override fun onStop() {
         super.onStop()
         Start.removeEventListener(startListener)

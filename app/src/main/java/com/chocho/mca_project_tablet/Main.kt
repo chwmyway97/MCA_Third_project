@@ -4,8 +4,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide.init
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -15,23 +20,42 @@ import com.google.firebase.ktx.Firebase
 class Main : AppCompatActivity() {
 
     private val database = Firebase.database
+
     private val nfc = database.reference.child("NFC")
+
+    private lateinit var robot : ConstraintLayout
+
+    private lateinit var intentLoding : Intent
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
-        Toast.makeText(this,"연결 안됨", Toast.LENGTH_SHORT).show()
+        init()
+
+    }
+
+    private fun init(){
+
+        // 화면 생성되면 뜨는 커스텀 토스트 메세지
+        when(intent.getStringExtra("key1")){
+
+            "string" -> customToastView("해제 완료 되었습니다.")
+
+            else ->  customToastView("안녕하세요")
+
+        }
 
         //xml에서 가져오기
-        val robot = findViewById<ConstraintLayout>(R.id.Robot)
+        robot = findViewById(R.id.Robot)
 
         //MainLoading 이동
-        val intentLoding = Intent(this@Main, MainLoading::class.java)
+        intentLoding = Intent(this@Main, MainLoading::class.java)
 
         //메인페이지 클릭시 토스트메세지
-        robot.setOnClickListener { Toast.makeText(this, "메인페이지", Toast.LENGTH_SHORT).show() }
+        robot.setOnClickListener { customToastView("업데이트 된 화면이 없습니다.") }
 
         //nfc파이어베이스
         nfc.addValueEventListener(object : ValueEventListener {
@@ -41,9 +65,6 @@ class Main : AppCompatActivity() {
                 val nfcValue = snapshot.value // nfcValue 값
 
                 when (nfcValue) {
-
-                    
-
 
                     // 로딩_호텔(1)
                     "Hotel" -> {
@@ -62,6 +83,7 @@ class Main : AppCompatActivity() {
                 }
 
                 Log.d("nfcValue", "Value is: $nfcValue") // nfcValue 값 확인
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -70,4 +92,18 @@ class Main : AppCompatActivity() {
 
         })
     }
+
+    //커스텀 메세지
+    private fun customToastView(text: String) {
+        val inflater = layoutInflater
+        val layout: View = inflater.inflate(R.layout.activity_custom_toast, findViewById(R.id.toast_layout_root))
+        val textView = layout.findViewById<TextView>(R.id.textboard)
+        textView.text = text
+
+        val toastView = Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT)
+        toastView.setGravity(Gravity.CENTER, 0, 0)
+        toastView.view = layout
+        toastView.show()
+    }
+
 }

@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.BATTERY_STATS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -33,10 +35,8 @@
         <activity android:name=".AmenityPage1" android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".AmenityPage3" android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".AmenityPage2" android:exported="true"  android:screenOrientation="landscape"/>
-
         <activity android:name=".ServingMain"  android:exported="true"  android:screenOrientation="landscape"/>
         <activity android:name=".ServingPage1" android:exported="true"  android:screenOrientation="landscape"/>
-
         <activity android:name=".MainLoading" android:exported="true"  android:screenOrientation="landscape"/>
 
 

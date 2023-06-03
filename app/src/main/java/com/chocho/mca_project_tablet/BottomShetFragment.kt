@@ -4,6 +4,10 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -35,10 +39,14 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val dialog: Dialog = super.onCreateDialog(savedInstanceState)
 
         dialog.setOnShowListener {
+
             val bottomSheetDialog = it as BottomSheetDialog
-            bottomSheetDialog.setCanceledOnTouchOutside(false) // 바깥쪽 터치로 다이얼로그가 사라지는 것을 방지
+
+            bottomSheetDialog.setCanceledOnTouchOutside(true) // 바깥쪽 터치(회색 부분) ture 사라짐 false 안사라짐
+
             setupRatio(bottomSheetDialog)
         }
+
 
         return dialog
     }
@@ -138,19 +146,26 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as View
         val behavior = BottomSheetBehavior.from<View>(bottomSheet)
 
+
+
         val layoutParams = bottomSheet.layoutParams
-        layoutParams.height = getBottomSheetDialogDefaultHeight()
+        layoutParams.height = getBottomSheetDialogDefaultHeight() //높이 지정
         bottomSheet.layoutParams = layoutParams
 
+
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
         behavior.isDraggable = false
-        behavior.isHideable = false
+        behavior.isHideable = false //아래로 드래그 하여 닫을수 있는지 여부 설정
+
 
         val button = bottomSheetDialog.findViewById<ImageButton>(R.id.button)
         button?.setOnClickListener { bottomSheetDialog.dismiss() }
 
-    }
 
+
+    }
+    //바텀 시트 높이 비율 90프로로 한다
     private fun getBottomSheetDialogDefaultHeight(): Int {
         return getWindowHeight() * 90 / 100
     }

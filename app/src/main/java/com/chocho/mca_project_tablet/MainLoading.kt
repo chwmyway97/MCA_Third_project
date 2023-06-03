@@ -62,7 +62,11 @@ class MainLoading : AppCompatActivity() {
 
             when (mainIntentKey) {
 
-                "0" -> startActivity(main)
+                "0" -> {
+                    main.putExtra("key1","string")
+                    startActivity(main)
+
+                }
                 "1" -> startActivity(intentAmenity)
                 "2" -> startActivity(intentServing)
 

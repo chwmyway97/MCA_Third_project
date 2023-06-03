@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +21,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ServingPage1 : AppCompatActivity() {
-
+    private val keyList = mutableListOf<String>()
 
     private val database = Firebase.database
     private val module = database.reference.child("Module_Motor")
+    private val table = database.reference.child("master")
 
     private lateinit var moduleListener: ValueEventListener
 
@@ -37,13 +39,15 @@ class ServingPage1 : AppCompatActivity() {
         val moduleImg = findViewById<ImageFilterView>(R.id.chain)
         val moduleTx = findViewById<TextView>(R.id.chain_tx)
 
+
+        //모듈 잠금 해제 코드
         moduleImg.setOnClickListener {
 
             module.setValue("Open")
 
         }
 
-        //모듈 잠금 해제 코드
+        //모듈 잠금 이미지 코드
         moduleListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val moduleValue = snapshot.value
@@ -63,20 +67,38 @@ class ServingPage1 : AppCompatActivity() {
             }
 
         }
+
+        //모듈 잠금 파이어베이스 리스너 연결
         module.addValueEventListener(moduleListener)
 
 
-        // 데이터 생성
-        val items = listOf("1번 테이블", "2번 테이블", "3번 테이블", "4번 테이블", "5번 테이블")
+        table.addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (tableSnapshot in snapshot.children) {
+                    Log.d("확인용",tableSnapshot.toString())
+                    val key = tableSnapshot.key
+                    if (key != null) {
+                        keyList.add(key)
+                        // 데이터 생성
+                        val items = keyList
 
+                        val servingAdapter = ServingAdapter(items,this@ServingPage1)
+                        // 리사이클러뷰 설정
+                        recyclerView.adapter = servingAdapter //여기있는 리사이클러뷰에 서빙어뎁터 내용 입히기
+                        recyclerView.layoutManager = LinearLayoutManager(this@ServingPage1, LinearLayoutManager.HORIZONTAL, false)
+                        Log.d("확인용1",keyList.toString())
+                        Log.d("확인용2",items.toString())
 
-        // 어댑터 생성
-        val adapter = ServingAdapter(items,this@ServingPage1)
+                    }
 
+                }
+            }
 
-        // 리사이클러뷰 설정
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
 
 
 

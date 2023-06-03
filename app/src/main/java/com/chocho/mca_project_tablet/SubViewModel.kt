@@ -6,13 +6,24 @@ import androidx.lifecycle.ViewModel
 
 class SubViewModel : ViewModel() {
 
-    private val repo = SubActivityRepo()
+    private val repo = Table1ActivityRepo()
+    private val repo2 = Table2ActivityRepo()
 
-    fun fetchData(): LiveData<MutableList<Meat>>{
+
+    fun table1Data(): LiveData<MutableList<Meat>>{
 
         val mutableData = MutableLiveData<MutableList<Meat>>()
 
         repo.getData().observeForever{ mutableData.value = it }
+
+        return mutableData
+    }
+
+    fun table2Data() : LiveData<MutableList<Meat>>{
+
+        val mutableData = MutableLiveData<MutableList<Meat>>()
+
+        repo2.getData().observeForever{ mutableData.value = it }
 
         return mutableData
     }
