@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.TextView
 import androidx.constraintlayout.utils.widget.ImageFilterView
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ServingPage1 : AppCompatActivity() {
+
     private val keyList = mutableListOf<String>()
 
     private val database = Firebase.database
@@ -28,6 +30,8 @@ class ServingPage1 : AppCompatActivity() {
     private val table = database.reference.child("master")
 
     private lateinit var moduleListener: ValueEventListener
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -155,6 +159,8 @@ class ServingPage1 : AppCompatActivity() {
             else -> Image_battery.setImageResource(R.drawable.battery_low)
         }
     }
+
+
 
 
 }

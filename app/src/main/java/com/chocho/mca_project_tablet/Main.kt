@@ -22,6 +22,9 @@ class Main : AppCompatActivity() {
     private val database = Firebase.database
 
     private val nfc = database.reference.child("NFC")
+    private val qr = database.reference.child("QR")
+    private val sound = database.reference.child("Sound")
+    private val hotelStart = database.reference.child("Start")
 
     private lateinit var robot : ConstraintLayout
 
@@ -42,11 +45,15 @@ class Main : AppCompatActivity() {
         // 화면 생성되면 뜨는 커스텀 토스트 메세지
         when(intent.getStringExtra("key1")){
 
-            "string" -> customToastView("해제 완료 되었습니다.")
+            "string" -> customToastView("해제 완료 되었습니다.") //해제시
 
-            else ->  customToastView("안녕하세요")
+            else ->  customToastView("만나서 반갑습니다 !!") //처음 시작시
 
         }
+
+        qr.removeValue()
+        sound.removeValue()
+        hotelStart.setValue("Null")
 
         //xml에서 가져오기
         robot = findViewById(R.id.Robot)
@@ -55,7 +62,7 @@ class Main : AppCompatActivity() {
         intentLoding = Intent(this@Main, MainLoading::class.java)
 
         //메인페이지 클릭시 토스트메세지
-        robot.setOnClickListener { customToastView("업데이트 된 화면이 없습니다.") }
+        robot.setOnClickListener { customToastView("     업데이트 된 화면이 없습니다.     ") }
 
         //nfc파이어베이스
         nfc.addValueEventListener(object : ValueEventListener {

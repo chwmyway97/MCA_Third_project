@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black_0A0813"
-    tools:context=".AmenityPage1">
+    tools:context=".HotelPage1">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="225dp"
-        android:layout_marginTop="222dp"
-        android:background="@drawable/img_lock2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_marginStart="225dp"-->
+<!--        android:layout_marginTop="222dp"-->
+<!--        android:background="@drawable/img_lock2"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -105,9 +105,10 @@
         android:layout_width="300dp"
         android:layout_height="600dp"
         android:layout_marginStart="117dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="45dp"
-        android:background="@drawable/robot_8"
+        android:background="@drawable/img_13"
+
         app:layout_constraintEnd_toStartOf="@+id/text_home"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -117,7 +118,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="225dp"
-        android:layout_marginTop="222dp"
+        android:layout_marginTop="205dp"
         android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

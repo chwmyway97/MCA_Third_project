@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/button_round"
     tools:context=".BottomSheetFragment">
@@ -12,7 +13,7 @@
         android:id="@+id/imageView"
         android:layout_width="300dp"
         android:layout_height="600dp"
-        android:background="@drawable/robot_8"
+        android:background="@drawable/img_13"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,20 +23,20 @@
         android:id="@+id/btn_motor1"
         android:layout_width="221dp"
         android:layout_height="92dp"
-        android:scaleType="centerCrop"
         android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.289" />
+        app:layout_constraintVertical_bias="0.248" />
 
     <ImageButton
         android:id="@+id/btn_motor2"
         android:layout_width="221dp"
         android:layout_height="92dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="19dp"
         android:scaleType="centerCrop"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +48,7 @@
         android:id="@+id/btn_motor3"
         android:layout_width="221dp"
         android:layout_height="92dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="20dp"
         android:scaleType="centerCrop"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,15 +56,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_motor2" />
 
-    <ImageButton
-        android:id="@+id/button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="550dp"
-        android:background="@drawable/img_back2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/button"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginBottom="550dp"-->
+<!--        android:background="@drawable/img_back2"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/imageView"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

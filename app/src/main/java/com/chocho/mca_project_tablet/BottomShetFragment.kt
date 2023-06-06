@@ -14,6 +14,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -38,14 +40,21 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog: Dialog = super.onCreateDialog(savedInstanceState)
 
+
+
+
         dialog.setOnShowListener {
 
             val bottomSheetDialog = it as BottomSheetDialog
 
             bottomSheetDialog.setCanceledOnTouchOutside(true) // 바깥쪽 터치(회색 부분) ture 사라짐 false 안사라짐
 
+
+
             setupRatio(bottomSheetDialog)
         }
+
+
 
 
         return dialog
@@ -147,7 +156,7 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
         val behavior = BottomSheetBehavior.from<View>(bottomSheet)
 
 
-
+        bottomSheet.setBackgroundResource(android.R.color.transparent)
         val layoutParams = bottomSheet.layoutParams
         layoutParams.height = getBottomSheetDialogDefaultHeight() //높이 지정
         bottomSheet.layoutParams = layoutParams
@@ -155,12 +164,14 @@ class BottomSheetFragment : BottomSheetDialogFragment() {
 
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+
+
         behavior.isDraggable = false
         behavior.isHideable = false //아래로 드래그 하여 닫을수 있는지 여부 설정
 
 
-        val button = bottomSheetDialog.findViewById<ImageButton>(R.id.button)
-        button?.setOnClickListener { bottomSheetDialog.dismiss() }
+//        val button = bottomSheetDialog.findViewById<ImageButton>(R.id.button)
+//        button?.setOnClickListener { bottomSheetDialog.dismiss() }
 
 
 
